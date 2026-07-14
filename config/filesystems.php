@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -29,7 +28,6 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -41,7 +39,25 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/').'/storage',
+            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'files' => [
+            'driver' => 'local',
+            'root' => public_path('files'),
+            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/files',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'dist' => [
+            'driver' => 'local',
+            'root' => public_path('dist'),
+            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/dist',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -59,7 +75,6 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
     ],
 
     /*
@@ -76,5 +91,4 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
-
 ];

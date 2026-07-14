@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ddev artisan migrate:fresh

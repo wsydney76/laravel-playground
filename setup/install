@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z $3 ]
+if [ -z $1 ]
 then
-    echo Usage: install project-name username password
+    echo Usage: install project-name
     exit 1
 fi
 
@@ -11,6 +11,5 @@ echo Installing project $1...
 ddev config --project-name=$1
 ddev composer install &&
 ddev composer run setup &&
-ddev artisan app:create-first-user $2 $3 admin@example.com &&
 ddev describe &&
 ddev launch
