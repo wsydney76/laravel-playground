@@ -7,7 +7,9 @@
 @else
     <div class="grid gap-6 sm:grid-cols-2">
         @foreach ($articles as $article)
-            <x-articles.card :article="$article" />
+            <div>
+                <x-articles.card :article="$article" />
+            </div>
         @endforeach
     </div>
 

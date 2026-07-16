@@ -57,7 +57,8 @@ return [
         'dist' => [
             'driver' => 'local',
             'root' => public_path('dist'),
-            'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/dist',
+            // 'url' => rtrim((string) env('APP_URL', 'http://localhost'), '/') . '/dist',
+            'url' => '/dist',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

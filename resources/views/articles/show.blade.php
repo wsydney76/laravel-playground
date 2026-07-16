@@ -16,7 +16,7 @@
                 <x-nl2br :text="$article->body" />
             </p>
             <p class="mt-4 text-sm text-zinc-400">
-                {{ $article->formatted_date }}
+                {{ $article->formatted_date_time }}
             </p>
         </flux:card>
     </div>

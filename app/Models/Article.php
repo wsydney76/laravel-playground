@@ -24,7 +24,12 @@ class Article extends Model implements HasMedia
 
     public function getFormattedDateAttribute(): string
     {
-        return $this->created_at->isoFormat('LL');
+        return $this->created_at->timezone(config('app.app_timezone'))->isoFormat('LL');
+    }
+
+    public function getFormattedDateTimeAttribute(): string
+    {
+        return $this->created_at->timezone(config('app.app_timezone'))->isoFormat('LLL');
     }
 
     public function registerMediaCollections(): void
