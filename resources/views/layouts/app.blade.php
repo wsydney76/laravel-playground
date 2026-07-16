@@ -12,9 +12,10 @@
         <title>{{ $title }} | {{ config('app.name') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @fonts
         @fluxAppearance
     </head>
-    <body class="bg-bg antialiased dark:bg-zinc-900">
+    <body class="bg-sky-50 antialiased dark:bg-sky-950">
         <flux:header
             container
             sticky
