@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Article>
@@ -18,9 +19,17 @@ class ArticleFactory extends Factory
      */
     public function definition(): array
     {
+        $title = rtrim(
+            fake()
+                ->unique()
+                ->sentence(fake()->numberBetween(4, 7), false),
+            '.',
+        );
+
         return [
             'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
-            'title' => fake()->sentence(6, false),
+            'title' => $title,
+            'slug' => Str::slug($title),
             'body' => fake()->paragraphs(3, true),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];

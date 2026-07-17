@@ -15,7 +15,12 @@ class Article extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['user_id', 'title', 'body'];
+    protected $fillable = ['user_id', 'title', 'slug', 'body'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function user(): BelongsTo
     {

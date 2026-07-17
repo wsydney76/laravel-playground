@@ -22,7 +22,7 @@
             </flux:heading>
         </a>
 
-        <flux:text>{{ Str::limit($article->body, 120) }}</flux:text>
+        <flux:text>{{ Str::limit($article->body, 120, preserveWords: true) }}</flux:text>
 
         <div class="flex items-center justify-between">
             <flux:text size="sm">

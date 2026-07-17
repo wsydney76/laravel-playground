@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ArticleController extends Controller
@@ -25,7 +26,10 @@ class ArticleController extends Controller
 
     public function store(StoreArticleRequest $request): RedirectResponse
     {
-        $article = $request->user()->articles()->create($request->validated());
+        $data = $request->validated();
+        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title']);
+
+        $article = $request->user()->articles()->create($data);
 
         if ($request->hasFile('featured_image')) {
             $article->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
@@ -50,7 +54,10 @@ class ArticleController extends Controller
 
     public function update(UpdateArticleRequest $request, Article $article): RedirectResponse
     {
-        $article->update($request->validated());
+        $data = $request->validated();
+        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title'], $article->id);
+
+        $article->update($data);
 
         if ($request->hasFile('featured_image')) {
             $article->clearMediaCollection('featured_image');
@@ -71,5 +78,18 @@ class ArticleController extends Controller
         $article->delete();
 
         return redirect()->route('articles.index')->with('status', __('Article deleted.'));
+    }
+
+    private function resolveSlug(?string $slug, string $title, ?int $ignoreId = null): string
+    {
+        $base = $slug ? Str::slug($slug) : Str::slug($title);
+        $candidate = $base;
+        $i = 1;
+
+        while (Article::where('slug', $candidate)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $candidate = $base . '-' . $i++;
+        }
+
+        return $candidate;
     }
 }

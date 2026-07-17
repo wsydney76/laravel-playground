@@ -2,6 +2,8 @@
     "Laravel 13 Custom": "Laravel 13 Custom",
     "HOMEPAGE": "STARTSEITE",
 
+    "a valid slug (optional)": "Ein gültiger Slug (optional)",
+    "If left empty, a slug will be automatically generated from the title.": "Wenn leer gelassen, wird ein Slug automatisch aus dem Titel generiert.",
     "Articles": "Artikel",
     "New Article": "Neuer Artikel",
     "Edit Article": "Artikel bearbeiten",

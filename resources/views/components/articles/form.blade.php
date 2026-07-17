@@ -16,8 +16,20 @@
         <flux:input
             :label="__('Title')"
             name="title"
+            id="article-title"
             value="{{ old('title', $article?->title) }}"
             autofocus
+        />
+    </div>
+
+    <div class="mb-6">
+        <flux:input
+            :label="__('Slug')"
+            name="slug"
+            id="article-slug"
+            value="{{ old('slug', $article?->slug) }}"
+            :placeholder="__('a valid slug (optional)')"
+            :description:trailing="__('If left empty, a slug will be automatically generated from the title.')"
         />
     </div>
 
