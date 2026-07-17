@@ -19,9 +19,10 @@ class ArticleFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::first()?->id ?? User::factory(),
+            'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
             'title' => fake()->sentence(6, false),
             'body' => fake()->paragraphs(3, true),
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

@@ -37,7 +37,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article): bool
     {
-        return $user->id === $article->user_id;
+        return $this->isAdminOrOwner($user, $article);
     }
 
     /**
@@ -45,7 +45,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        return $user->id === $article->user_id;
+        return $this->isAdminOrOwner($user, $article);
     }
 
     /**
@@ -53,7 +53,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        return $user->id === $article->user_id;
+        return $this->isAdminOrOwner($user, $article);
     }
 
     /**
@@ -61,6 +61,11 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->id === $article->user_id;
+        return $this->isAdminOrOwner($user, $article);
+    }
+
+    private function isAdminOrOwner(User $user, Article $article): bool
+    {
+        return $user->role === 'admin' || $user->id === $article->user_id;
     }
 }

@@ -12,6 +12,6 @@ ddev config --project-name=$1
 ddev composer install &&
 ddev composer run setup &&
 ddev artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations"
-ddev artisan migrate &&
+ddev artisan migrate:fresh --seed &&
 ddev describe &&
 ddev launch
