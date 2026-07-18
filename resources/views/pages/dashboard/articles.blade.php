@@ -376,6 +376,7 @@ new #[Title('Dashboard - Articles')] class extends Component {
         <x-dashboard.bulk-select-owner :users="$this->users" />
 
         <livewire:articles.details-modal />
+        <livewire:articles.history-modal />
     </x-layouts::dashboard>
 </div>
 

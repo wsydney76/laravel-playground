@@ -34,6 +34,13 @@
             {{ __('View on website') }}
         </flux:menu.item>
 
+        <flux:menu.item
+            icon="clock"
+            wire:click="$dispatch('show-article-history', { id: {{ $article->id }} })"
+        >
+            {{ __('Show history') }}
+        </flux:menu.item>
+
         <flux:menu.separator />
 
         @foreach ($this->states as $state)

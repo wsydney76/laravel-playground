@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\ArticleAction;
 use App\Models\Article;
+use App\Models\ArticleHistory;
 use App\Models\User;
 use App\Notifications\ArticleCreated;
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ class ArticleService
 
         while (
             Article::where('slug', $candidate)
-                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
             $candidate = $base . '-' . $i++;
@@ -38,6 +40,8 @@ class ArticleService
             $article->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
         }
 
+        $this->recordHistory($article, $author, ArticleAction::Create, $article->title);
+
         $this->notifyAdmins($article);
 
         return $article;
@@ -56,11 +60,15 @@ class ArticleService
             $article->clearMediaCollection('featured_image');
         }
 
+        $this->recordHistory($article, auth()->user(), ArticleAction::Update, $article->title);
+
         return $article;
     }
 
     public function delete(Article $article): void
     {
+        $this->recordHistory($article, auth()->user(), ArticleAction::Delete, $article->title);
+
         $article->delete();
     }
 
@@ -68,17 +76,36 @@ class ArticleService
     {
         $article->state = $state;
         $article->save();
+
+        $this->recordHistory($article, auth()->user(), ArticleAction::ChangeState, $state);
     }
 
     public function changeOwner(Article $article, int $newOwnerId): void
     {
+        $newOwner = User::find($newOwnerId);
+
         $article->user_id = $newOwnerId;
         $article->save();
+
+        $this->recordHistory(
+            $article,
+            auth()->user(),
+            ArticleAction::ChangeOwner,
+            $newOwner?->name ?? (string) $newOwnerId,
+        );
     }
 
     public function reassignArticles(User $fromUser, int $toUserId): void
     {
+        $toUser = User::find($toUserId);
+
         $fromUser->articles()->update(['user_id' => $toUserId]);
+
+        $value = ($toUser?->name ?? (string) $toUserId) . ' (from ' . $fromUser->name . ')';
+
+        foreach ($fromUser->articles()->withoutGlobalScopes()->get() as $article) {
+            $this->recordHistory($article, auth()->user(), ArticleAction::ReassignArticles, $value);
+        }
     }
 
     public function notifyAdmins(Article $article): void
@@ -91,5 +118,20 @@ class ArticleService
         foreach ($admins as $admin) {
             $admin->notify(new ArticleCreated($article));
         }
+    }
+
+    private function recordHistory(
+        Article $article,
+        ?User $actor,
+        ArticleAction $action,
+        ?string $value = null,
+    ): void {
+        ArticleHistory::create([
+            'article_id' => $article->id,
+            'user_id' => $actor?->id,
+            'user_name' => $actor->name ?? '',
+            'action' => $action->value,
+            'value' => $value,
+        ]);
     }
 }
