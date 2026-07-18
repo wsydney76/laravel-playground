@@ -30,9 +30,45 @@ new #[Title('Dashboard - Articles')] class extends Component {
     #[Url(as: 'search')]
     public string $filterSearch = '';
 
-    public function updating(): void
+    public array $selectedArticles = [];
+    public bool $selectAll = false;
+
+    public function updatingFilterUser(): void
     {
         $this->resetPage();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+    }
+
+    public function updatingFilterState(): void
+    {
+        $this->resetPage();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+    }
+
+    public function updatingFilterSearch(): void
+    {
+        $this->resetPage();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+    }
+
+    public function updatedSelectAll(bool $value): void
+    {
+        $this->selectedArticles = $value
+            ? $this->articles
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->toArray()
+            : [];
+    }
+
+    public function updatedSelectedArticles(): void
+    {
+        $this->selectAll =
+            count($this->selectedArticles) > 0 &&
+            count($this->selectedArticles) === $this->articles->count();
     }
 
     #[Computed]
@@ -123,6 +159,81 @@ new #[Title('Dashboard - Articles')] class extends Component {
         Flux::toast(__('Owner updated successfully'), variant: 'success');
     }
 
+    // ── Bulk operations ──────────────────────────────────────────────────────
+
+    public function bulkDelete(): void
+    {
+        $articles = Article::whereIn('id', $this->selectedArticles)->get();
+
+        foreach ($articles as $article) {
+            $this->authorize('delete', $article);
+            $this->articleService->delete($article);
+        }
+
+        $count = $articles->count();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+
+        Flux::toast(
+            __(':count article(s) deleted successfully', ['count' => $count]),
+            variant: 'success',
+        );
+    }
+
+    public function bulkChangeState(string $state): void
+    {
+        $articles = Article::whereIn('id', $this->selectedArticles)->get();
+
+        foreach ($articles as $article) {
+            $this->authorize('update', $article);
+            $this->articleService->changeState($article, $state);
+        }
+
+        $count = $articles->count();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+
+        Flux::toast(
+            __(':count article(s) changed to :state', [
+                'count' => $count,
+                'state' => State::from($state)->label(),
+            ]),
+            variant: 'success',
+        );
+    }
+
+    public string $bulkChangeOwnerUserId = '';
+
+    public function openBulkChangeOwner(): void
+    {
+        $this->authorize('administer', Article::class);
+        $this->bulkChangeOwnerUserId = '';
+        $this->modal('bulk-change-owner')->show();
+    }
+
+    public function applyBulkChangeOwner(): void
+    {
+        $this->authorize('administer', Article::class);
+
+        $articles = Article::whereIn('id', $this->selectedArticles)->get();
+
+        foreach ($articles as $article) {
+            $this->articleService->changeOwner($article, (int) $this->bulkChangeOwnerUserId);
+        }
+
+        $count = $articles->count();
+
+        $this->modal('bulk-change-owner')->close();
+        $this->bulkChangeOwnerUserId = '';
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+
+        Flux::toast(
+            __('Owner updated for :count article(s)', ['count' => $count]),
+            variant: 'success',
+        );
+    }
+
     public function resetFilters()
     {
         $this->reset();
@@ -136,6 +247,7 @@ new #[Title('Dashboard - Articles')] class extends Component {
         :heading="__('Articles')"
         :subheading="$this->isAdmin ? __('Manage articles for all users and states') : __('Manage your articles')"
     >
+        {{-- Filters row --}}
         <div class="mb-4 flex gap-3">
             @if ($this->isAdmin)
                 <flux:select wire:model.live="filterUser">
@@ -177,6 +289,13 @@ new #[Title('Dashboard - Articles')] class extends Component {
             ></flux:button>
         </div>
 
+        {{-- Bulk actions row --}}
+        <x-dashboard.bulk-actions
+            :is-admin="$this->isAdmin"
+            :states="$this->states"
+            :selected-articles="$this->selectedArticles"
+        />
+
         @if ($this->articles->isEmpty())
             <flux:callout variant="warning">
                 <flux:callout.heading>
@@ -189,8 +308,27 @@ new #[Title('Dashboard - Articles')] class extends Component {
         @endif
 
         <flux:table :paginate="$this->articles">
+            <flux:table.columns>
+                <flux:table.column class="w-8">
+                    <flux:checkbox
+                        wire:model.live="selectAll"
+                        :indeterminate="count($this->selectedArticles) > 0 && !$this->selectAll"
+                    />
+                </flux:table.column>
+                <flux:table.column>{{ __('Title') }}</flux:table.column>
+                <flux:table.column>{{ __('State') }}</flux:table.column>
+                <flux:table.column></flux:table.column>
+            </flux:table.columns>
+
             @foreach ($this->articles as $article)
                 <flux:table.row wire:key="article-{{ $article->id }}">
+                    <flux:table.cell class="w-8">
+                        <flux:checkbox
+                            wire:model.live="selectedArticles"
+                            value="{{ $article->id }}"
+                        />
+                    </flux:table.cell>
+
                     <flux:table.cell>
                         <flux:link
                             as="button"
@@ -217,74 +355,25 @@ new #[Title('Dashboard - Articles')] class extends Component {
                         </flux:badge>
                     </flux:table.cell>
                     <flux:table.cell>
-                        <flux:dropdown position="bottom" align="start">
-                            <flux:button
-                                icon="ellipsis-horizontal"
-                                variant="ghost"
-                                size="xs"
-                                inset="top bottom"
-                            ></flux:button>
-
-                            <flux:menu>
-                                <flux:menu.item
-                                    icon="pencil-square"
-                                    :href="route('articles.edit', ['article' => $article])"
-                                >
-                                    {{ __('Edit') }}
-                                </flux:menu.item>
-
-                                @if ($this->isAdmin)
-                                    <flux:menu.item
-                                        icon="user"
-                                        wire:click="openChangeOwner('{{ $article->slug }}')"
-                                    >
-                                        {{ __('Change owner') }}
-                                    </flux:menu.item>
-                                @endif
-
-                                <flux:menu.item
-                                    icon="arrow-top-right-on-square"
-                                    :href="route('articles.show', ['article' => $article])"
-                                    target="_blank"
-                                >
-                                    {{ __('View on website') }}
-                                </flux:menu.item>
-
-                                <flux:menu.separator />
-
-                                @foreach ($this->states as $state)
-                                    @if ($article->state !== $state)
-                                        <flux:menu.item
-                                            :icon="$state->icon()"
-                                            wire:click="changeState('{{ $article->slug }}', '{{ $state->value }}')"
-                                        >
-                                            {{ $state->actionLabel() }}
-                                        </flux:menu.item>
-                                    @endif
-                                @endforeach
-
-                                <flux:menu.separator />
-
-                                <flux:menu.item
-                                    icon="trash"
-                                    variant="danger"
-                                    wire:confirm="{{ __('Are you sure you want to delete this article?') }}"
-                                    wire:click="destroyArticle('{{ $article->slug }}')"
-                                >
-                                    {{ __('Delete') }}
-                                </flux:menu.item>
-                            </flux:menu>
-                        </flux:dropdown>
+                        <x-dashboard.row-menu
+                            :is-admin="$this->isAdmin"
+                            :states="$this->states"
+                            :article="$article"
+                        />
                     </flux:table.cell>
                 </flux:table.row>
             @endforeach
         </flux:table>
 
+        {{-- Single article change owner modal --}}
         <x-dashboard.select-owner
             :heading="__('Change owner')"
             :subheading="__('Select a new owner for this article.')"
             :users="$this->users"
         />
+
+        {{-- Bulk change owner modal --}}
+        <x-dashboard.bulk-select-owner :users="$this->users" />
 
         <livewire:articles.details-modal />
     </x-layouts::dashboard>
