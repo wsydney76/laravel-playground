@@ -4,9 +4,11 @@
             <flux:navlist.item :href="route('dashboard.articles')" wire:navigate>
                 {{ __('Articles') }}
             </flux:navlist.item>
-            <flux:navlist.item :href="route('dashboard.users')" wire:navigate>
-                {{ __('Users') }}
-            </flux:navlist.item>
+            @can('administer', App\Models\Article::class)
+                <flux:navlist.item :href="route('dashboard.users')" wire:navigate>
+                    {{ __('Users') }}
+                </flux:navlist.item>
+            @endcan
         </flux:navlist>
     </div>
 

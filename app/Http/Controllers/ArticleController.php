@@ -30,6 +30,7 @@ class ArticleController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title']);
+        $data['creator_id'] = $request->user()->id;
 
         $article = $request->user()->articles()->create($data);
 
@@ -39,12 +40,7 @@ class ArticleController extends Controller
 
         $this->notifyAdmins($article);
 
-        return redirect()
-            ->route(
-                $article->state->value === 'published' ? 'articles.show' : 'articles.index',
-                $article,
-            )
-            ->with('status', __('Article created successfully.'));
+        return $this->redirectToArticle($article, __('Article created successfully'));
     }
 
     public function show(Article $article): View
@@ -80,12 +76,7 @@ class ArticleController extends Controller
             $article->clearMediaCollection('featured_image');
         }
 
-        return redirect()
-            ->route(
-                $article->state->value === 'published' ? 'articles.show' : 'articles.index',
-                $article,
-            )
-            ->with('status', __('Article updated successfully.'));
+        return $this->redirectToArticle($article, __('Article updated successfully'));
     }
 
     public function destroy(Article $article): RedirectResponse
@@ -123,5 +114,20 @@ class ArticleController extends Controller
         foreach ($admins as $admin) {
             $admin->notify(new ArticleCreated($article));
         }
+    }
+
+    /**
+     * @param Article $article
+     * @return RedirectResponse
+     */
+    protected function redirectToArticle(Article $article, $status): RedirectResponse
+    {
+        if ($article->state->value === 'published') {
+            return redirect()
+                ->route('articles.show', ['article' => $article])
+                ->with('status', $status);
+        }
+
+        return redirect()->route('articles.index')->with('status', $status);
     }
 }

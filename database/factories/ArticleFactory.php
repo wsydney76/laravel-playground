@@ -28,6 +28,7 @@ class ArticleFactory extends Factory
 
         return [
             'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
+            'creator_id' => fn (array $attributes) => $attributes['user_id'],
             'title' => $title,
             'slug' => Str::slug($title),
             'body' => fake()->paragraphs(3, true),

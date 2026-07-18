@@ -15,18 +15,14 @@ new #[Title('Dashboard - Articles')] class extends Component {
 
     #[Url(as: 'user')]
     public string $filterUser = '';
+
     #[Url(as: 'state')]
     public string $filterState = '';
 
     #[Url(as: 'search')]
     public string $filterSearch = '';
 
-    public function updatingFilterUser(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatingFilterState(): void
+    public function updating(): void
     {
         $this->resetPage();
     }
@@ -44,12 +40,23 @@ new #[Title('Dashboard - Articles')] class extends Component {
     }
 
     #[Computed]
+    public function isAdmin(): bool
+    {
+        return auth()->user()?->can('administer', Article::class) ?? false;
+    }
+
+    #[Computed]
     public function articles()
     {
-        $this->authorize('administer', Article::class);
+        $user = auth()->user();
+
+        if (! $user) {
+            abort(403);
+        }
 
         return Article::query()
-            ->when($this->filterUser, fn ($q) => $q->where('user_id', $this->filterUser))
+            ->when(! $this->isAdmin, fn ($q) => $q->where('user_id', $user->id))
+            ->when($this->isAdmin && $this->filterUser, fn ($q) => $q->where('user_id', $this->filterUser))
             ->when($this->filterState, fn ($q) => $q->where('state', $this->filterState))
             ->when(
                 $this->filterSearch,
@@ -78,25 +85,59 @@ new #[Title('Dashboard - Articles')] class extends Component {
 
         Flux::toast(__('Article deleted successfully'), variant: 'success');
     }
+
+    public ?int $changeOwnerArticleId = null;
+    public string $changeOwnerUserId = '';
+
+    public function openChangeOwner(Article $article): void
+    {
+        $this->authorize('administer', Article::class);
+        $this->changeOwnerArticleId = $article->id;
+        $this->changeOwnerUserId = (string) $article->user_id;
+        $this->modal('change-owner')->show();
+    }
+
+    public function applyChangeOwner(): void
+    {
+        $this->authorize('administer', Article::class);
+
+        $article = Article::findOrFail($this->changeOwnerArticleId);
+        $article->user_id = (int) $this->changeOwnerUserId;
+        $article->save();
+
+        $this->modal('change-owner')->close();
+        $this->changeOwnerArticleId = null;
+        $this->changeOwnerUserId = '';
+
+        Flux::toast(__('Owner updated successfully'), variant: 'success');
+    }
+
+    public function resetFilters()
+    {
+        $this->reset();
+        $this->resetPage();
+    }
 };
 ?>
 
 <div>
     <x-layouts::dashboard
         :heading="__('Articles')"
-        :subheading="__('Manage articles for all users and states')"
+        :subheading="$this->isAdmin ? __('Manage articles for all users and states') : __('Manage your articles')"
     >
         <div class="mb-4 flex gap-3">
-            <flux:select wire:model.live="filterUser">
-                <flux:select.option option value="">
-                    {{ __('All users') }}
-                </flux:select.option>
-                @foreach ($this->users as $user)
-                    <flux:select.option value="{{ $user->id }}">
-                        {{ $user->name }}
+            @if ($this->isAdmin)
+                <flux:select wire:model.live="filterUser">
+                    <flux:select.option option value="">
+                        {{ __('All users') }}
                     </flux:select.option>
-                @endforeach
-            </flux:select>
+                    @foreach ($this->users as $user)
+                        <flux:select.option value="{{ $user->id }}">
+                            {{ $user->name }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+            @endif
 
             <flux:select wire:model.live="filterState">
                 <flux:select.option value="">{{ __('All states') }}</flux:select.option>
@@ -112,6 +153,17 @@ new #[Title('Dashboard - Articles')] class extends Component {
                 wire:model.live.debounce.300ms="filterSearch"
                 :placeholder="__('Search by title')"
             />
+
+            <flux:button
+                class="mt-1"
+                icon="x-circle"
+                variant="ghost"
+                square
+                :disabled="(!$this->isAdmin || !$this->filterUser) && !$this->filterState && !$this->filterSearch"
+                tooltip="{{ __('Reset filters') }}"
+                size="sm"
+                wire:click="resetFilters"
+            ></flux:button>
         </div>
 
         @if ($this->articles->isEmpty())
@@ -129,16 +181,27 @@ new #[Title('Dashboard - Articles')] class extends Component {
             @foreach ($this->articles as $article)
                 <flux:table.row wire:key="article-{{ $article->id }}">
                     <flux:table.cell>
-                        <flux:link href="{{ route('articles.show', ['article' => $article]) }}">
+                        <flux:link
+                            as="button"
+                            wire:click="$dispatch('show-article',{ id: {{ $article->id }} })"
+                        >
                             {{ $article->title }}
                         </flux:link>
+
                         <flux:text size="sm" class="mt-2">
-                            {{ $article->user->name }},
+                            {{ $article->user->name }}
+                            @if ($article->user->name !== $article->creator->name)
+                                    ({{ __('Created by :name', ['name' => $article->creator->name]) }})
+                            @endif
+
                             {{ $article->formattedDateTime }}
                         </flux:text>
                     </flux:table.cell>
                     <flux:table.cell>
-                        <flux:badge :color="$article->state->color()">
+                        <flux:badge
+                            :color="$article->state->color()"
+                            :icon="$article->state->icon()"
+                        >
                             {{ $article->state->label() }}
                         </flux:badge>
                     </flux:table.cell>
@@ -156,7 +219,24 @@ new #[Title('Dashboard - Articles')] class extends Component {
                                     icon="pencil-square"
                                     :href="route('articles.edit', ['article' => $article])"
                                 >
-                                    Bearbeiten
+                                    {{ __('Edit') }}
+                                </flux:menu.item>
+
+                                @if ($this->isAdmin)
+                                    <flux:menu.item
+                                        icon="user"
+                                        wire:click="openChangeOwner('{{ $article->slug }}')"
+                                    >
+                                        {{ __('Change owner') }}
+                                    </flux:menu.item>
+                                @endif
+
+                                <flux:menu.item
+                                    icon="arrow-top-right-on-square"
+                                    :href="route('articles.show', ['article' => $article])"
+                                    target="_blank"
+                                >
+                                    {{ __('View on website') }}
                                 </flux:menu.item>
 
                                 <flux:menu.separator />
@@ -188,11 +268,40 @@ new #[Title('Dashboard - Articles')] class extends Component {
                 </flux:table.row>
             @endforeach
         </flux:table>
+
+        <flux:modal name="change-owner" class="min-w-88">
+            <flux:heading size="lg">{{ __('Change owner') }}</flux:heading>
+            <flux:subheading class="mt-1 mb-6">
+                {{ __('Select a new owner for this article.') }}
+            </flux:subheading>
+
+            <flux:select wire:model="changeOwnerUserId" :label="__('Owner')">
+                @foreach ($this->users as $user)
+                    <flux:select.option value="{{ $user->id }}">
+                        {{ $user->name }}
+                    </flux:select.option>
+                @endforeach
+            </flux:select>
+
+            <div class="mt-6 flex justify-end gap-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:button variant="primary" wire:click="applyChangeOwner">
+                    {{ __('Apply') }}
+                </flux:button>
+            </div>
+        </flux:modal>
+
+        <livewire:articles.details-modal />
     </x-layouts::dashboard>
 </div>
 
 <style>
     td {
         white-space: normal !important;
+    }
+    button {
+        cursor: pointer;
     }
 </style>

@@ -13,7 +13,7 @@
                     {{ __('Settings') }}
                 </flux:menu.item>
 
-                @can('administer', Article::class)
+                @if (auth()->user()->isAdmin() || auth()->user()->articles()->exists())
                     <flux:menu.item
                         :href="route('dashboard.articles')"
                         icon="shield-check"
@@ -21,7 +21,7 @@
                     >
                         {{ __('Admin Dashboard') }}
                     </flux:menu.item>
-                @endcan
+                @endif
 
                 <flux:menu.separator />
 

@@ -17,7 +17,7 @@ class Article extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['user_id', 'title', 'slug', 'body', 'state'];
+    protected $fillable = ['user_id', 'creator_id', 'title', 'slug', 'body', 'state'];
 
     public function getRouteKeyName(): string
     {
@@ -34,6 +34,11 @@ class Article extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function scopePublished(Builder $query): void
