@@ -2,6 +2,6 @@
     <x-articles.form
         :action="route('articles.store')"
         :submit-label="__('Publish')"
-        :cancel-href="route('articles.index')"
+        :cancel-href="route('articles.index', app()->getLocale())"
     />
 </x-layouts::app>

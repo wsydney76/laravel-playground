@@ -27,7 +27,7 @@ new class extends Component {
                 size="sm"
                 icon:trailing="arrow-top-right-on-square"
                 class="mb-6 block"
-                :href="route('articles.show', $this->article)"
+                :href="$this->article->url"
                 target="_blank"
             >
                 {{ __('View on website') }}

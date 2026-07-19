@@ -11,18 +11,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Translatable\Attributes\Translatable;
+use Spatie\Translatable\HasTranslations;
 
+#[Translatable('title', 'slug', 'body')]
 class Article extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ArticleFactory> */
     use HasFactory;
     use InteractsWithMedia;
+    use HasTranslations;
 
     protected $guarded = [];
 
     public function getRouteKeyName(): string
     {
-        return 'slug';
+        return 'id';
     }
 
     protected function casts(): array
@@ -60,6 +64,11 @@ class Article extends Model implements HasMedia
     public function getFormattedDateTimeAttribute(): string
     {
         return $this->created_at->timezone(config('app.app_timezone'))->isoFormat('LLL');
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('articles.show', ['locale' => app()->getLocale(), 'article' => $this->id, 'slug' => $this->slug]);
     }
 
     public function isPublished(): bool

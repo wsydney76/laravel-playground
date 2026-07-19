@@ -23,8 +23,8 @@ new class extends Component {
         }
 
         return Article::query()
-            ->where('title', 'like', "%{$this->search}%")
-            ->orWhere('body', 'like', "%{$this->search}%")
+            ->where('title->' . app()->getLocale(), 'like', "%{$this->search}%")
+            ->orWhere('body->' . app()->getLocale(), 'like', "%{$this->search}%")
             ->paginate(8);
     }
 

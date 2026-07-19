@@ -28,12 +28,16 @@ class ArticleController extends Controller
 
     public function store(StoreArticleRequest $request): RedirectResponse
     {
-        $article = $this->articleService->create($request->user(), $request->safe()->except('featured_image'), $request->file('featured_image'));
+        $article = $this->articleService->create(
+            $request->user(),
+            $request->safe()->except('featured_image'),
+            $request->file('featured_image'),
+        );
 
         return $this->redirectToArticle($article, __('Article created successfully'));
     }
 
-    public function show(Article $article): View
+    public function show(string $locale, Article $article, string $slug): View
     {
         if (
             $article->state->value !== 'published' &&
@@ -54,7 +58,12 @@ class ArticleController extends Controller
 
     public function update(UpdateArticleRequest $request, Article $article): RedirectResponse
     {
-        $this->articleService->update($article, $request->safe()->except('featured_image'), $request->file('featured_image'), $request->boolean('delete_featured_image'));
+        $this->articleService->update(
+            $article,
+            $request->safe()->except('featured_image'),
+            $request->file('featured_image'),
+            $request->boolean('delete_featured_image'),
+        );
 
         return $this->redirectToArticle($article, __('Article updated successfully'));
     }
@@ -71,11 +80,11 @@ class ArticleController extends Controller
     protected function redirectToArticle(Article $article, string $status): RedirectResponse
     {
         if ($article->state->value === 'published') {
-            return redirect()
-                ->route('articles.show', ['article' => $article])
-                ->with('status', $status);
+            return redirect()->to($article->url)->with('status', $status);
         }
 
-        return redirect()->route('articles.index')->with('status', $status);
+        return redirect()
+            ->route('articles.index', ['locale' => app()->getLocale()])
+            ->with('status', $status);
     }
 }
