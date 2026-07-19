@@ -7,15 +7,18 @@ xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
 database:
-    type: mariadb
-    version: "11.8"
-omit_containers: [db]
+  type: mysql
+  version: "8.4"
 use_dns_when_possible: true
 composer_version: "2"
 disable_settings_management: true
 web_environment: []
 nodejs_version: "24"
 corepack_enable: false
+hooks:
+  pre-stop:
+    - exec-host: ddev snapshot --cleanup --name latest --yes || true
+    - exec-host: ddev snapshot --name latest
 web_extra_exposed_ports:
     - name: vite
       container_port: 5173
