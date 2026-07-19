@@ -1,6 +1,7 @@
 {
     "(and :count more error)": "(und :count weiterer Fehler)",
     "(and :count more errors)": "(und :count weiterer Fehler)|(und :count weitere Fehler)|(und :count weitere Fehler)",
+    ":number per page": ":number pro Seite",
     ":count article(s) changed to :state": ":count Artikel auf :state geändert",
     ":count article(s) deleted successfully": ":count Artikel erfolgreich gelöscht",
     ":count selected": ":count ausgewählt",
@@ -17,6 +18,7 @@
     "Add": "Hinzufügen",
     "Admin": "Administrator",
     "Agree": "Zustimmen",
+    "All on one page": "Alle auf einer Seite",
     "All rights reserved.": "Alle Rechte vorbehalten.",
     "All roles": "Alle Rollen",
     "All states": "Alle Status",

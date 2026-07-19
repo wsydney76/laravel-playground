@@ -31,6 +31,9 @@ new #[Title('Dashboard - Articles')] class extends Component {
     #[Url(as: 'search')]
     public string $filterSearch = '';
 
+    #[Url]
+    public int $perPage = 10;
+
     public array $selectedArticles = [];
     public bool $selectAll = false;
 
@@ -49,6 +52,13 @@ new #[Title('Dashboard - Articles')] class extends Component {
     }
 
     public function updatingFilterSearch(): void
+    {
+        $this->resetPage();
+        $this->selectedArticles = [];
+        $this->selectAll = false;
+    }
+
+    public function updatingPerPage(): void
     {
         $this->resetPage();
         $this->selectedArticles = [];
@@ -108,7 +118,7 @@ new #[Title('Dashboard - Articles')] class extends Component {
                 fn($q) => $q->where('title', 'like', "%{$this->filterSearch}%"),
             )
             ->orderByDesc('created_at')
-            ->paginate(8);
+            ->paginate($this->perPage);
     }
 
     public function changeState(Article $article, $state): void

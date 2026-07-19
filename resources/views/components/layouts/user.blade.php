@@ -23,6 +23,16 @@
                     </flux:menu.item>
                 @endif
 
+                @can('administer', Article::class)
+                    <flux:menu.item
+                        :href="route('filament.admin.pages.dashboard')"
+                        icon="wrench"
+                        wire:navigate
+                    >
+                        {{ __('Filament') }}
+                    </flux:menu.item>
+                @endcan
+
                 <flux:menu.separator />
 
                 <form method="POST" action="{{ route('logout') }}">

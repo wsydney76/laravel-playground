@@ -24,13 +24,22 @@
 
             <flux:menu.separator />
 
+            @php
+                $selectedStates = count($selectedArticles) > 0
+                    ? \App\Models\Article::whereIn('id', $selectedArticles)->pluck('state')->unique()
+                    : collect();
+                $allSameState = $selectedStates->count() === 1 ? $selectedStates->first() : null;
+            @endphp
+
             @foreach ($states as $state)
-                <flux:menu.item
-                    :icon="$state->icon()"
-                    wire:click="bulkChangeState('{{ $state->value }}')"
-                >
-                    {{ $state->actionLabel() }}
-                </flux:menu.item>
+                @if ($allSameState === null || $state !== $allSameState)
+                    <flux:menu.item
+                        :icon="$state->icon()"
+                        wire:click="bulkChangeState('{{ $state->value }}')"
+                    >
+                        {{ $state->actionLabel() }}
+                    </flux:menu.item>
+                @endif
             @endforeach
 
             <flux:menu.separator />
