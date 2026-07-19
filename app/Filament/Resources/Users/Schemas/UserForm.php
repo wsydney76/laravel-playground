@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Enums\Locale;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -28,10 +27,6 @@ class UserForm
                 TextInput::make('role')
                     ->required()
                     ->default('member'),
-                Select::make('locale')
-                    ->options(Locale::class)
-                    ->default('en')
-                    ->required(),
                 Textarea::make('two_factor_secret')
                     ->columnSpanFull(),
                 Textarea::make('two_factor_recovery_codes')

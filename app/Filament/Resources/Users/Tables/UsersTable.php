@@ -24,9 +24,6 @@ class UsersTable
                     ->sortable(),
                 TextColumn::make('role')
                     ->searchable(),
-                TextColumn::make('locale')
-                    ->badge()
-                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

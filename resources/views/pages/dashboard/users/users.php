@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\Locale;
+
 use App\Models\Article;
 use App\Models\User;
 use App\Services\ArticleService;
@@ -65,11 +65,6 @@ new #[Title('Dashboard - Users')] class extends Component {
             ->paginate(15);
     }
 
-    #[Computed]
-    public function locales()
-    {
-        return Locale::cases();
-    }
 
     public function changeRole(User $user, string $role): void
     {
