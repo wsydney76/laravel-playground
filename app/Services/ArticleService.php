@@ -7,7 +7,7 @@ use App\Models\Article;
 use App\Models\ArticleHistory;
 use App\Models\User;
 use App\Notifications\ArticleCreated;
-use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class ArticleService
@@ -29,15 +29,15 @@ class ArticleService
         return $candidate;
     }
 
-    public function create(User $author, array $data, ?Request $request = null): Article
+    public function create(User $author, array $data, ?UploadedFile $featuredImage = null): Article
     {
         $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title']);
         $data['creator_id'] = $author->id;
 
         $article = $author->articles()->create($data);
 
-        if ($request?->hasFile('featured_image')) {
-            $article->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
+        if ($featuredImage) {
+            $article->addMedia($featuredImage)->toMediaCollection('featured_image');
         }
 
         $this->recordHistory($article, $author, ArticleAction::Create, $article->title);
@@ -47,16 +47,17 @@ class ArticleService
         return $article;
     }
 
-    public function update(Article $article, array $data, ?Request $request = null): Article
+    public function update(Article $article, array $data, ?UploadedFile $featuredImage = null, bool $deleteFeaturedImage = false): Article
     {
+
         $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title'], $article->id);
 
         $article->update($data);
 
-        if ($request?->hasFile('featured_image')) {
+        if ($featuredImage) {
             $article->clearMediaCollection('featured_image');
-            $article->addMediaFromRequest('featured_image')->toMediaCollection('featured_image');
-        } elseif ($request?->boolean('delete_featured_image')) {
+            $article->addMedia($featuredImage)->toMediaCollection('featured_image');
+        } elseif ($deleteFeaturedImage) {
             $article->clearMediaCollection('featured_image');
         }
 

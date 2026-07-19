@@ -28,7 +28,7 @@ class ArticleController extends Controller
 
     public function store(StoreArticleRequest $request): RedirectResponse
     {
-        $article = $this->articleService->create($request->user(), $request->validated(), $request);
+        $article = $this->articleService->create($request->user(), $request->safe()->except('featured_image'), $request->file('featured_image'));
 
         return $this->redirectToArticle($article, __('Article created successfully'));
     }
@@ -54,7 +54,7 @@ class ArticleController extends Controller
 
     public function update(UpdateArticleRequest $request, Article $article): RedirectResponse
     {
-        $this->articleService->update($article, $request->validated(), $request);
+        $this->articleService->update($article, $request->safe()->except('featured_image'), $request->file('featured_image'), $request->boolean('delete_featured_image'));
 
         return $this->redirectToArticle($article, __('Article updated successfully'));
     }

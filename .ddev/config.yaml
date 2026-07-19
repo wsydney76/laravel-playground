@@ -1,4 +1,4 @@
-name: laravel13-custom
+name: laravel-playground
 type: laravel
 docroot: public
 php_version: "8.4"

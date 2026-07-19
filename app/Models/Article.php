@@ -18,7 +18,7 @@ class Article extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['user_id', 'creator_id', 'title', 'slug', 'body', 'state'];
+    protected $guarded = [];
 
     public function getRouteKeyName(): string
     {
