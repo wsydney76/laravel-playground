@@ -22,6 +22,8 @@ Workshop step 2:
 
 Added content localization (en/de) powered by Spatie's Laravel Translatable package.
 
+Added soft delete functionality to the Article model.
+
 ### Laravel Custom
 
 Maybe all of this escalated a bit, so not very useful for beginners anymore.
