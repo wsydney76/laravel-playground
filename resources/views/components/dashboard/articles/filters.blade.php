@@ -25,6 +25,8 @@
                 {{ $state->label() }}
             </flux:select.option>
         @endforeach
+
+        <flux:select.option value="trashed">{{ __('Trashed') }}</flux:select.option>
     </flux:select>
 
     <flux:input
@@ -34,11 +36,21 @@
     />
 
     <flux:select wire:model.live="perPage">
-        <flux:select.option value="5">{{ __(':number per page', ['number' => 5]) }}</flux:select.option>
-        <flux:select.option value="10">{{ __(':number per page', ['number' => 10]) }}</flux:select.option>
-        <flux:select.option value="25">{{ __(':number per page', ['number' => 25]) }}</flux:select.option>
-        <flux:select.option value="50">{{ __(':number per page', ['number' => 50]) }}</flux:select.option>
-        <flux:select.option value="100">{{ __(':number per page', ['number' => 100]) }}</flux:select.option>
+        <flux:select.option value="5">
+            {{ __(':number per page', ['number' => 5]) }}
+        </flux:select.option>
+        <flux:select.option value="10">
+            {{ __(':number per page', ['number' => 10]) }}
+        </flux:select.option>
+        <flux:select.option value="25">
+            {{ __(':number per page', ['number' => 25]) }}
+        </flux:select.option>
+        <flux:select.option value="50">
+            {{ __(':number per page', ['number' => 50]) }}
+        </flux:select.option>
+        <flux:select.option value="100">
+            {{ __(':number per page', ['number' => 100]) }}
+        </flux:select.option>
         <flux:select.option value="99999">{{ __('All on one page') }}</flux:select.option>
     </flux:select>
 

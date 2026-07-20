@@ -112,7 +112,12 @@ new #[Title('Dashboard - Articles')] class extends Component {
                 $this->isAdmin && $this->filterUser,
                 fn($q) => $q->where('user_id', $this->filterUser),
             )
-            ->when($this->filterState, fn($q) => $q->where('state', $this->filterState))
+            ->when(
+                $this->filterState,
+                fn($q) => $this->filterState == 'trashed'
+                    ? $q->onlyTrashed()
+                    : $q->where('state', $this->filterState),
+            )
             ->when(
                 $this->filterSearch,
                 fn($q) => $q->where('title', 'like', "%{$this->filterSearch}%"),
@@ -138,6 +143,15 @@ new #[Title('Dashboard - Articles')] class extends Component {
         $this->articleService->delete($article);
 
         Flux::toast(__('Article deleted successfully'), variant: 'success');
+    }
+
+    public function restoreArticle($id)
+    {
+        $article = Article::withTrashed()->findOrFail($id);
+        $this->authorize('update', $article);
+        $article->restore();
+
+        Flux::toast(__('Article restored successfully'), variant: 'success');
     }
 
     public ?int $changeOwnerArticleId = null;

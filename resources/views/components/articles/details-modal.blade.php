@@ -10,7 +10,7 @@ new class extends Component {
     #[On('show-article')]
     public function showArticle(int $id): void
     {
-        $this->article = Article::findOrFail($id);
+        $this->article = Article::withTrashed()->findOrFail($id);
         $this->modal('article-detail')->show();
     }
 };

@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->json('slug');
             $table->json('body');
             $table->string('state')->default('published');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

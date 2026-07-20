@@ -74,7 +74,9 @@ class ArticleController extends Controller
 
         $this->articleService->delete($article);
 
-        return redirect()->route('articles.index')->with('status', __('Article deleted.'));
+        return redirect()
+            ->route('articles.index', ['locale' => app()->getLocale()])
+            ->with('status', __('Article deleted.'));
     }
 
     protected function redirectToArticle(Article $article, string $status): RedirectResponse
