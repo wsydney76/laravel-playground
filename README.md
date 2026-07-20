@@ -10,6 +10,25 @@ You can use this project to test out new ideas, learn Laravel, prototype applica
 * Implements a Livewire powered dashboard to administrate articles, users and notifications.
 * Includes an (unconfigured) Filament admin panel.
 
+## Versions
+
+### Laravel Playground: 1.0.0
+
+The result of an (informal) workshop.
+
+### Laravel Playground: 2.0.0
+
+Workshop step 2:
+
+Added content localization (en/de) powered by Spatie's Laravel Translatable package.
+
+### Laravel Custom
+
+Maybe all of this escalated a bit, so not very useful for beginners anymore.
+
+So we created a stripped down version of the project, which is more suitable for beginners at [Laravel Custom](https://github.com/wsydney76/laravel-custom)
+
+
 ## Installation
 
 Git clone this repository and run the following commands under DDEV:
