@@ -5,10 +5,17 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'show'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::livewire('dashboard/articles', 'pages::dashboard.articles')->name('dashboard.articles');
+    Route::livewire('dashboard/users', 'pages::dashboard.users')->name('dashboard.users');
+    Route::livewire('dashboard/notifications', 'pages::dashboard.notifications')->name(
+        'dashboard.notifications',
+    );
+});
 
-Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
-Route::livewire('articles/search', 'articles.search')->name('articles.search');
+Route::get('/', function () {
+    return redirect('/' . config('app.locale'));
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
@@ -22,18 +29,19 @@ Route::middleware('auth')->group(function () {
     );
 });
 
-Route::get('articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+Route::prefix('{locale}')
+    ->middleware('locale')
+    ->group(function () {
+        Route::get('/', [HomeController::class, 'show'])->name('home');
+        Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+        Route::get('articles/{article}/{slug}', [ArticleController::class, 'show'])->name(
+            'articles.show',
+        );
+        Route::livewire('articles/search', 'articles.search')->name('articles.search');
+    });
 
 Route::get('test/{template}', function (string $template) {
     return view("test.{$template}", ['template' => $template]);
-});
-
-Route::middleware('auth')->group(function () {
-    Route::livewire('dashboard/articles', 'pages::dashboard.articles')->name('dashboard.articles');
-    Route::livewire('dashboard/users', 'pages::dashboard.users')->name('dashboard.users');
-    Route::livewire('dashboard/notifications', 'pages::dashboard.notifications')->name(
-        'dashboard.notifications',
-    );
 });
 
 require_once __DIR__ . '/settings.php';

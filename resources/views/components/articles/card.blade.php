@@ -6,7 +6,8 @@
 
 <flux:card {{ $attributes->class(['flex flex-col overflow-hidden p-0']) }}>
     @if ($article->hasMedia('featured_image'))
-        <a href="{{ route('articles.show', $article) }}" class="block shrink-0 overflow-hidden">
+
+        <a href="{{ $article->url }}" class="block shrink-0 overflow-hidden">
             <img
                 src="{{ $article->getFirstMediaUrl('featured_image', 'featured') }}"
                 alt="{{ $article->title }}"
@@ -16,7 +17,7 @@
     @endif
 
     <div class="flex flex-1 flex-col gap-4 p-4">
-        <a href="{{ route('articles.show', $article) }}">
+        <a href="{{ $article->url }}">
             <flux:heading size="lg" class="hover:text-sky-700 hover:underline">
                 {{ $article->title }}
             </flux:heading>

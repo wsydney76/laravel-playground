@@ -11,11 +11,13 @@
         />
 
         {{-- Bulk actions row --}}
-        <x-dashboard.articles.bulk-actions
-            :is-admin="$this->isAdmin"
-            :states="$this->states"
-            :selected-articles="$this->selectedArticles"
-        />
+        @if ($this->filterState !== 'trashed')
+            <x-dashboard.articles.bulk-actions
+                :is-admin="$this->isAdmin"
+                :states="$this->states"
+                :selected-articles="$this->selectedArticles"
+            />
+        @endif
 
         @if ($this->articles->isEmpty())
             <flux:callout variant="warning">
@@ -76,11 +78,23 @@
                         </flux:badge>
                     </flux:table.cell>
                     <flux:table.cell>
-                        <x-dashboard.articles.row-menu
-                            :is-admin="$this->isAdmin"
-                            :states="$this->states"
-                            :article="$article"
-                        />
+                        @if ($this->filterState !== 'trashed')
+                            <x-dashboard.articles.row-menu
+                                :is-admin="$this->isAdmin"
+                                :states="$this->states"
+                                :article="$article"
+                            />
+                        @else
+                            <flux:button
+                                size="xs"
+                                variant="primary"
+                                color="red"
+                                wire:click="restoreArticle({{ $article->id }})"
+                                wire:confirm="{{ __('Are you sure you want to restore this article?') }}"
+                            >
+                                {{ __('Restore') }}
+                            </flux:button>
+                        @endif
                     </flux:table.cell>
                 </flux:table.row>
             @endforeach

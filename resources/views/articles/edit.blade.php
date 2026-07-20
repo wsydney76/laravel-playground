@@ -4,6 +4,6 @@
         method="PUT"
         :article="$article"
         :submit-label="__('Save Changes')"
-        :cancel-href="route('articles.show', $article)"
+        :cancel-href="$article->url"
     />
 </x-layouts::app>

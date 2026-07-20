@@ -8,7 +8,7 @@
             size="sm"
             as="a"
             icon="magnifying-glass"
-            href="{{ route('articles.search') }}"
+            href="{{ route('articles.search', app()->getLocale()) }}"
             variant="filled"
         >
             {{ __('Search') }}

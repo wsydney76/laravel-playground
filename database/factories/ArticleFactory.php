@@ -25,13 +25,14 @@ class ArticleFactory extends Factory
                 ->sentence(fake()->numberBetween(4, 7), false),
             '.',
         );
+        $slug = Str::slug($title);
 
         return [
             'user_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
             'creator_id' => fn (array $attributes) => $attributes['user_id'],
-            'title' => $title,
-            'slug' => Str::slug($title),
-            'body' => fake()->paragraphs(3, true),
+            'title' => ['en' => $title . ' (en)', 'de' => $title . ' (de)'],
+            'slug' => ['en' => $slug, 'de' => $slug],
+            'body' => ['en' => fake()->paragraphs(3, true), 'de' => fake('de_DE')->paragraphs(3, true)],
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }

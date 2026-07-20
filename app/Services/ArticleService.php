@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ArticleAction;
+use App\Enums\Locale;
 use App\Models\Article;
 use App\Models\ArticleHistory;
 use App\Models\User;
@@ -16,6 +17,8 @@ class ArticleService
     {
         $base = $slug ? Str::slug($slug) : Str::slug($title);
         $candidate = $base;
+        return $candidate;
+
         $i = 1;
 
         while (
@@ -29,9 +32,23 @@ class ArticleService
         return $candidate;
     }
 
+    public function normalizeTranslatableFields(array $data, ?int $ignoreId = null): array
+    {
+        foreach (Locale::cases() as $locale) {
+            $slug = $data['slug'][$locale->value] ?? '';
+            $title = $data['title'][$locale->value] ?? '';
+
+            if (empty($slug)) {
+                $data['slug'][$locale->value] = $this->resolveSlug(null, $title, $ignoreId);
+            }
+        }
+
+        return $data;
+    }
+
     public function create(User $author, array $data, ?UploadedFile $featuredImage = null): Article
     {
-        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title']);
+        $data = $this->normalizeTranslatableFields($data);
         $data['creator_id'] = $author->id;
 
         $article = $author->articles()->create($data);
@@ -49,8 +66,7 @@ class ArticleService
 
     public function update(Article $article, array $data, ?UploadedFile $featuredImage = null, bool $deleteFeaturedImage = false): Article
     {
-
-        $data['slug'] = $this->resolveSlug($data['slug'] ?? null, $data['title'], $article->id);
+        $data = $this->normalizeTranslatableFields($data, $article->id);
 
         $article->update($data);
 

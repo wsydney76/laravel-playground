@@ -27,6 +27,8 @@
 
             <flux:spacer />
 
+            <x-layouts.language-switcher />
+
             <flux:sidebar.toggle class="lg:hidden" icon="bars-3" inset="left" />
         </flux:header>
 

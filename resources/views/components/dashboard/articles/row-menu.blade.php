@@ -1,7 +1,7 @@
 @props([
     'isAdmin' => false,
     'states' => [],
-    /**@var\Illuminate\Database\Eloquent\Model*/'article',
+    'article',
 ])
 
 <flux:dropdown position="bottom" align="start" {{ $attributes }}>
@@ -28,7 +28,7 @@
 
         <flux:menu.item
             icon="arrow-top-right-on-square"
-            :href="route('articles.show', ['article' => $article])"
+            :href="$article->url"
             target="_blank"
         >
             {{ __('View on website') }}

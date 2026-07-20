@@ -1,5 +1,5 @@
 <flux:brand
-    :href="route('home')"
+    :href="route('home', ['locale' => app()->getLocale()])"
     :name="config('app.name')"
     {{ $attributes }}
 >
