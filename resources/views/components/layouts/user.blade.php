@@ -13,7 +13,15 @@
                     {{ __('Settings') }}
                 </flux:menu.item>
 
-                @if (auth()->user()->isAdmin() || auth()->user()->articles()->exists())
+                @if (auth()->user()->isAdmin() ||auth()->user()->articles()->exists())
+                    <flux:menu.item
+                        :href="route('articles.my', app()->getLocale())"
+                        icon="chat-bubble-left-ellipsis"
+                        wire:navigate
+                    >
+                        {{ __('My Articles') }}
+                    </flux:menu.item>
+
                     <flux:menu.item
                         :href="route('dashboard.articles')"
                         icon="shield-check"

@@ -38,6 +38,7 @@ Route::prefix('{locale}')
         Route::get('articles/{article}/{slug}', [ArticleController::class, 'show'])->name(
             'articles.show',
         );
+        Route::get('articles/my', [ArticleController::class, 'my'])->name('articles.my');
         Route::livewire('articles/search', 'articles.search')->name('articles.search');
     });
 

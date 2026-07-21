@@ -2,7 +2,7 @@
     use App\Models\Article;
 @endphp
 
-<x-layouts::app :title="__('Articles')">
+<x-layouts::app :title="$title">
     <x-slot name="titleactions">
         <flux:button
             size="sm"

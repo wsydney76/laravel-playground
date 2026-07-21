@@ -17,8 +17,9 @@ class ArticleController extends Controller
     public function index(): View
     {
         $articles = Article::with('user')->published()->latest()->paginate(8);
+        $title = __('Articles');
 
-        return view('articles.index', compact('articles'));
+        return view('articles.index', compact('articles', 'title'));
     }
 
     public function create(): View
@@ -88,5 +89,14 @@ class ArticleController extends Controller
         return redirect()
             ->route('articles.index', ['locale' => app()->getLocale()])
             ->with('status', $status);
+    }
+
+    public function my()
+    {
+        Gate::authorize('viewAny', Article::class);
+
+        $articles = auth()->user()->articles()->latest()->paginate(8);
+        $title = 'My Articles';
+        return view('articles.index', compact('articles', 'title'));
     }
 }

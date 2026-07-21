@@ -25,6 +25,7 @@ new class extends Component {
         return Article::query()
             ->where('title->' . app()->getLocale(), 'like', "%{$this->search}%")
             ->orWhere('body->' . app()->getLocale(), 'like', "%{$this->search}%")
+            ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->paginate(8);
     }
 
@@ -42,7 +43,7 @@ new class extends Component {
         wire:model.live.debounce.300ms="search"
         autofocus
         icon="magnifying-glass"
-        :placeholder="__('Search in title and body...')"
+        :placeholder="__('Search in title, body and author...')"
     />
 
     @if ($search)
