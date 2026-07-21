@@ -84,10 +84,11 @@ class Article extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('featured_image')
-            ->useDisk('local')
-            ->storeConversionsOnDisk('dist')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+        $this->addMediaCollection('featured_image')->acceptsMimeTypes([
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+        ]);
     }
 
     public function registerMediaConversions($media = null): void

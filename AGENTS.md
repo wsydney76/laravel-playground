@@ -35,7 +35,7 @@ Articles have both `user_id` (owner, can be reassigned) and `creator_id` (immuta
 `App\Enums\State` and `App\Enums\Locale` expose `label()`, `color()`, and `icon()` methods — pass the enum directly to views/components rather than mapping these values in controllers.
 
 ### Media
-`Article` implements `HasMedia` via Spatie MediaLibrary. The `featured_image` collection stores on `local` disk; conversions (`featured` 1024×350, `thumb` 300×200) are stored on `dist` disk and run synchronously (`nonQueued()`).
+`Article` implements `HasMedia` via Spatie MediaLibrary. The `featured_image` collection stores on `local` disk; conversions (`featured` 1024×350, `thumb` 300×200) are stored on `dist` disk under the `conversions/` subfolder (path: `dist/conversions/{media_id}/`) and run synchronously (`nonQueued()`). Routing is handled by `App\Support\MediaLibrary\ArticlePathGenerator` registered in `config/media-library.php` under `custom_path_generators`.
 
 ### Locale
 `SetLocale` middleware (appended to `web` group) reads `Auth::user()->locale` (a `Locale` enum) and calls `app()->setLocale()`. This runs as middleware (not a service provider) because auth guard resolution can happen mid-render.
