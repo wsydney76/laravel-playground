@@ -61,7 +61,7 @@ class ArticleController extends Controller
     {
         $this->articleService->update(
             $article,
-            $request->safe()->except('featured_image'),
+            $request->safe()->except(['featured_image', 'delete_featured_image']),
             $request->file('featured_image'),
             $request->boolean('delete_featured_image'),
         );
