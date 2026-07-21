@@ -35,7 +35,10 @@ class ArticleController extends Controller
             $request->file('featured_image'),
         );
 
-        return $this->redirectToArticle($article, __('Article created successfully'));
+        return $this->redirectToArticle(
+            $article,
+            __('Article created successfully') . ' (' . $article->state->label() . ')',
+        );
     }
 
     public function show(string $locale, Article $article, string $slug): View
@@ -66,7 +69,10 @@ class ArticleController extends Controller
             $request->boolean('delete_featured_image'),
         );
 
-        return $this->redirectToArticle($article, __('Article updated successfully'));
+        return $this->redirectToArticle(
+            $article,
+            __('Article updated successfully') . ' (' . $article->state->label() . ')',
+        );
     }
 
     public function destroy(Article $article): RedirectResponse
@@ -96,7 +102,7 @@ class ArticleController extends Controller
         Gate::authorize('viewAny', Article::class);
 
         $articles = auth()->user()->articles()->latest()->paginate(8);
-        $title = 'My Articles';
+        $title = __('My Articles');
         return view('articles.index', compact('articles', 'title'));
     }
 }
