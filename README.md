@@ -24,6 +24,16 @@ Added content localization (en/de) powered by Spatie's Laravel Translatable pack
 
 Added soft delete functionality to the Article model.
 
+### Laravel Playground: 2.1.0
+
+A lot of small improvements including 
+
+* Editable homepage content (powered by Livewire)
+* Added reusable media library form component and HandlesMediaUpload concern.
+* Better media upload path handling
+* Database seed now clears existing media files via `media:clear-uploads` command.
+* Copy translatable content from one language to another.
+
 ### Laravel Custom
 
 Maybe all of this escalated a bit, so not very useful for beginners anymore.
