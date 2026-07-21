@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             [
                 'sitename' => 'My Site',
                 'copyright' => 'My Site. All rights reserved.',
-                'homepagetext' => fake()->paragraphs(3, true),
+                'homepagetext' => fake()->paragraphs(4, true),
             ],
         );
 

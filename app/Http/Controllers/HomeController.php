@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Homepage;
 
 class HomeController extends Controller
@@ -10,6 +11,7 @@ class HomeController extends Controller
     public function show()
     {
         $page = Homepage::getSingleton();
-        return view('home', compact('page'));
+        $articlesCount = Article::count();
+        return view('home', compact('page', 'articlesCount'));
     }
 }

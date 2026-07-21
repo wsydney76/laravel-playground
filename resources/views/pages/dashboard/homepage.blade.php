@@ -44,7 +44,7 @@ new #[Title('Dashboard - Homepage')] class extends Component {
     >
         <flux:card class="p-6">
             <flux:text>
-                {{ __('Place a logo.svg file in public/files.') }}
+                {{ __('Logo will be delivered from asset path :file', ['file' => config('app.logo')]) }}
             </flux:text>
 
             <form wire:submit="update" class="mt-6 space-y-6">

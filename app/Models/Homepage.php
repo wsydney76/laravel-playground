@@ -15,5 +15,9 @@ class Homepage extends Model
     {
         return self::firstOrFail();
     }
-}
 
+    public function getLogoSrcAttribute()
+    {
+        return asset(config('app.logo'));
+    }
+}
