@@ -6,7 +6,6 @@
 
 <flux:card {{ $attributes->class(['flex flex-col overflow-hidden p-0']) }}>
     @if ($article->hasMedia('featured_image'))
-
         <a href="{{ $article->url }}" class="block shrink-0 overflow-hidden">
             <img
                 src="{{ $article->getFirstMediaUrl('featured_image', 'featured') }}"
@@ -37,11 +36,11 @@
                 <flux:button
                     as="a"
                     href="{{ route('articles.edit', $article) }}"
-                    variant="ghost"
-                    size="sm"
-                    icon="pencil-square"
-                    title="{{ __('Edit') }}"
-                />
+                    variant="filled"
+                    size="xs"
+                >
+                    {{ __('Edit') }}
+                </flux:button>
             @endcan
         </div>
     </div>

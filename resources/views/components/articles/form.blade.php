@@ -50,6 +50,7 @@
                         />
 
                         <flux:error name="title.{{ $locale->value }}" />
+                        <x-shared.copy-value id="article-title" :locale="$locale" />
                     </div>
 
                     <div>
@@ -74,8 +75,11 @@
                         >
                             {{ old('body.' . $locale->value, $article?->getTranslation('body', $locale->value)) }}
 
+
                         </flux:textarea>
                         <flux:error name="body.{{ $locale->value }}" />
+
+                        <x-shared.copy-value id="article-body" :locale="$locale" />
                     </div>
                 </flux:tab.panel>
             @endforeach
