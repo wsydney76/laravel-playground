@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Concerns\HandlesMediaUpload;
 use App\Enums\ArticleAction;
 use App\Enums\Locale;
 use App\Models\Article;
@@ -13,13 +14,14 @@ use Illuminate\Support\Str;
 
 class ArticleService
 {
+    use HandlesMediaUpload;
     public function resolveSlug(?string $slug, string $title, ?int $ignoreId = null): string
     {
         $base = $slug ? Str::slug($slug) : Str::slug($title);
         $candidate = $base;
         return $candidate;
 
-        $i = 1;
+        /*$i = 1;
 
         while (
             Article::where('slug', $candidate)
@@ -29,7 +31,7 @@ class ArticleService
             $candidate = $base . '-' . $i++;
         }
 
-        return $candidate;
+        return $candidate;*/
     }
 
     public function normalizeTranslatableFields(array $data, ?int $ignoreId = null): array
@@ -53,9 +55,7 @@ class ArticleService
 
         $article = $author->articles()->create($data);
 
-        if ($featuredImage) {
-            $article->addMedia($featuredImage)->toMediaCollection('featured_image');
-        }
+        $this->syncMedia($article, 'featured_image', $featuredImage);
 
         $this->recordHistory($article, $author, ArticleAction::Create, $article->title);
 
@@ -64,18 +64,17 @@ class ArticleService
         return $article;
     }
 
-    public function update(Article $article, array $data, ?UploadedFile $featuredImage = null, bool $deleteFeaturedImage = false): Article
-    {
+    public function update(
+        Article $article,
+        array $data,
+        ?UploadedFile $featuredImage = null,
+        bool $deleteFeaturedImage = false,
+    ): Article {
         $data = $this->normalizeTranslatableFields($data, $article->id);
 
         $article->update($data);
 
-        if ($featuredImage) {
-            $article->clearMediaCollection('featured_image');
-            $article->addMedia($featuredImage)->toMediaCollection('featured_image');
-        } elseif ($deleteFeaturedImage) {
-            $article->clearMediaCollection('featured_image');
-        }
+        $this->syncMedia($article, 'featured_image', $featuredImage, $deleteFeaturedImage);
 
         $this->recordHistory($article, auth()->user(), ArticleAction::Update, $article->title);
 

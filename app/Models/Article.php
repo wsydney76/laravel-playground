@@ -72,7 +72,7 @@ class Article extends Model implements HasMedia
     {
         return route('articles.show', [
             'locale' => app()->getLocale(),
-            'article' => $this->id,
+            'article' => $this,
             'slug' => $this->slug,
         ]);
     }

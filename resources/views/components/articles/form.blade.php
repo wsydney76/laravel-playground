@@ -101,45 +101,12 @@
         </div>
     </div>
 
-    <flux:label>{{ __('Featured Image') }}</flux:label>
-
-    <flux:card class="mt-2">
-        <div class="flex items-start gap-8">
-            @if ($article?->hasMedia('featured_image'))
-                <div>
-                    <img
-                        src="{{ $article->getFirstMediaUrl('featured_image', 'thumb') }}"
-                        alt="{{ __('Current featured image') }}"
-                        class="h-32 w-auto rounded-md object-cover"
-                    />
-                </div>
-            @endif
-
-            <div>
-                <flux:input
-                    id="featured_image"
-                    name="featured_image"
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                />
-                @error('featured_image')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-            @if ($article?->hasMedia('featured_image'))
-                <div class="mt-2">
-                    <flux:checkbox
-                        :label="__('Delete current image')"
-                        name="delete_featured_image"
-                        value="1"
-                    />
-                    <p class="mt-2 text-xs text-zinc-400">
-                        {{ __('Or upload a new image to replace it.') }}
-                    </p>
-                </div>
-            @endif
-        </div>
-    </flux:card>
+    <x-image-upload
+        :model="$article"
+        collection="featured_image"
+        name="featured_image"
+        :label="__('Featured Image')"
+    />
 
     <div class="mt-8 flex gap-3">
         <flux:button size="sm" variant="primary" color="sky" type="submit">

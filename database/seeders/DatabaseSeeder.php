@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Remove all previously uploaded media files so seeding always starts fresh.
+        $this->command->call('media:clear-uploads');
+
         // Ensure the singleton Homepage record always exists.
         Homepage::firstOrCreate(
             [],

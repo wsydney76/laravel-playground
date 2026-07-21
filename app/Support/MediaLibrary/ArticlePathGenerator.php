@@ -16,4 +16,9 @@ class ArticlePathGenerator extends DefaultPathGenerator
     {
         return 'conversions/' . $this->getBasePath($media) . '/';
     }
+
+    public function getPath(Media $media): string
+    {
+        return 'uploads/' . $this->getBasePath($media) . '/';
+    }
 }
