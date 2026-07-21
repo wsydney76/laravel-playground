@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Article;
+use App\Models\Homepage;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,6 +17,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ensure the singleton Homepage record always exists.
+        Homepage::firstOrCreate(
+            [],
+            [
+                'sitename' => 'My Site',
+                'copyright' => 'My Site. All rights reserved.',
+                'homepagetext' => fake()->paragraphs(3, true),
+            ],
+        );
+
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',

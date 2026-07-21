@@ -11,6 +11,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('dashboard/notifications', 'pages::dashboard.notifications')->name(
         'dashboard.notifications',
     );
+    Route::livewire('dashboard/homepage', 'pages::dashboard.homepage')->name('dashboard.homepage');
 });
 
 Route::get('/', function () {

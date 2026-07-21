@@ -1,3 +1,7 @@
+@php
+    use App\Models\Homepage;
+@endphp
+
 @props([
     'title' => config('app.name'),
     'titleactions' => null,
@@ -21,7 +25,7 @@
             sticky
             class="border-b border-sky-300 bg-sky-100 dark:border-sky-700 dark:bg-sky-900"
         >
-            <x-layouts.brand />
+            <x-layouts.brand :name="$homepage?->sitename" />
 
             <x-layouts.nav class="w-full max-lg:hidden" />
 
@@ -37,9 +41,7 @@
             collapsible="mobile"
             class="border-r border-sky-200 bg-sky-50 lg:hidden dark:border-sky-700 dark:bg-sky-900"
         >
-            <flux:sidebar.header>
-                <x-layouts.brand />
-            </flux:sidebar.header>
+            <x-layouts.brand :name="$homepage?->sitename" />
 
             <x-layouts.sidebar-nav class="flex flex-col" />
         </flux:sidebar>
@@ -57,11 +59,14 @@
             </div>
 
             {{ $slot }}
+
+            <x-layouts.footer :copyright="$homepage?->copyright ?? ''" />
         </flux:main>
 
         <flux:toast.group expanded position="top center">
             <flux:toast class="w-auto min-w-0 sm:min-w-96" />
         </flux:toast.group>
+
         @fluxScripts
     </body>
 </html>

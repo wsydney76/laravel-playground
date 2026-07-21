@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Homepage;
+
 class HomeController extends Controller
 {
     //
     public function show()
     {
-        return view('home');
+        $page = Homepage::getSingleton();
+        return view('home', compact('page'));
     }
 }

@@ -1,9 +1,11 @@
+@props(['name' => config('app.name')])
+
 <flux:brand
     :href="route('home', ['locale' => app()->getLocale()])"
-    :name="config('app.name')"
+    :name="$name"
     {{ $attributes }}
 >
     <x-slot name="logo">
-        <flux:icon icon="bolt" />
+        <img src="{{ asset('files/logo.svg') }}" alt="{{ $name }}" />
     </x-slot>
 </flux:brand>

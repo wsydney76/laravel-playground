@@ -1,1 +1,5 @@
-<x-layouts::app title="Laravel 13 Custom">HOMEPAGE</x-layouts::app>
+<x-layouts::app :title="$page->sitename">
+    <div class="prose dark:prose-invert max-w-none">
+        {!! nl2br(e($page->homepagetext)) !!}
+    </div>
+</x-layouts::app>
