@@ -6,7 +6,7 @@
     @auth
         <flux:dropdown>
             <flux:button variant="subtle" aria-label="Preferred color scheme">
-                <flux:avatar size="xs" :name="auth()->user()->name" color="sky" />
+                <flux:avatar size="xs" :name="auth()->user()->name" color="auto" />
             </flux:button>
             <flux:menu>
                 <flux:menu.group

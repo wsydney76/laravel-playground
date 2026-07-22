@@ -43,10 +43,11 @@
 
     @if ($hasMedia)
         {{-- Delete checkbox (only when an image already exists) --}}
+        @php($file = $model->getFirstMedia($collection))
         <flux:file-item
             class="mt-4"
-            :heading="$model->getFirstMedia($collection)?->file_name"
-            :image="$model->getFirstMediaUrl($collection, $thumbConversion)"
+            :heading="$file?->file_name"
+            :image="$file?->getUrl($thumbConversion)"
         >
             <x-slot name="actions">
                 <div class="pt-1 pr-2">
