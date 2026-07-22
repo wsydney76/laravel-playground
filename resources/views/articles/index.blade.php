@@ -1,5 +1,8 @@
 @php
     use App\Models\Article;
+    use Illuminate\Pagination\LengthAwarePaginator;
+    /** @var LengthAwarePaginator<Article> $articles */
+    /** @var string $title */
 @endphp
 
 <x-layouts::app :title="$title">

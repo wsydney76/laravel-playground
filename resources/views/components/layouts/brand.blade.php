@@ -1,5 +1,9 @@
 @props(['name' => config('app.name')])
 
+@php
+    /** @var string $name */
+@endphp
+
 <flux:brand
     :href="route('home', ['locale' => app()->getLocale()])"
     :name="$name"

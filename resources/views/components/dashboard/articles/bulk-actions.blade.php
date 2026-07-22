@@ -4,6 +4,13 @@
     'selectedArticles' => [],
 ])
 
+@php
+    use App\Enums\State;
+    /** @var bool $isAdmin */
+    /** @var array<int, State> $states */
+    /** @var array<int> $selectedArticles */
+@endphp
+
 <div {{ $attributes->class(['mb-3 flex items-center gap-3']) }}>
     <flux:dropdown>
         <flux:button
@@ -29,6 +36,8 @@
                     ? \App\Models\Article::whereIn('id', $selectedArticles)->pluck('state')->unique()
                     : collect();
                 $allSameState = $selectedStates->count() === 1 ? $selectedStates->first() : null;
+                /** @var \Illuminate\Support\Collection<int, State> $selectedStates */
+                /** @var State|null $allSameState */
             @endphp
 
             @foreach ($states as $state)

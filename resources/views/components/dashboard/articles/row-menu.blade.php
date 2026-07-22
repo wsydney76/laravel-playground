@@ -4,6 +4,14 @@
     'article',
 ])
 
+@php
+    use App\Enums\State;
+    use App\Models\Article;
+    /** @var bool $isAdmin */
+    /** @var array<int, State> $states */
+    /** @var Article $article */
+@endphp
+
 <flux:dropdown position="bottom" align="start" {{ $attributes }}>
     <flux:button
         icon="ellipsis-horizontal"

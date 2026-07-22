@@ -1,3 +1,13 @@
+@props([
+    'heading' => '',
+    'subheading' => '',
+])
+
+@php
+    /** @var string $heading */
+    /** @var string $subheading */
+@endphp
+
 <div class="flex w-full items-start">
     <div class="me-10 w-full pb-4 md:w-32">
         <flux:navlist aria-label="{{ __('Dashboard') }}">

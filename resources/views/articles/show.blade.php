@@ -1,3 +1,8 @@
+@php
+    use App\Models\Article;
+    /** @var Article $article */
+@endphp
+
 <x-layouts::app :title="$article->title">
     @unless ($article->isPublished())
         <flux:callout class="mb-6" variant="danger" icon="exclamation-triangle">

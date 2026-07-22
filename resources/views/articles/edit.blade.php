@@ -1,3 +1,8 @@
+@php
+    use App\Models\Article;
+    /** @var Article $article */
+@endphp
+
 <x-layouts::app :title="__('Edit Article')">
     <x-articles.form
         :action="route('articles.update', $article)"

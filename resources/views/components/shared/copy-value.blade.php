@@ -1,8 +1,13 @@
 @props([
-    /**@var\mixed*/'locale',
+    'locale',
     'id',
 ])
 @use('App\Enums\Locale')
+
+@php
+    /** @var Locale $locale */
+    /** @var string $id */
+@endphp
 <div {{ $attributes->class(['mt-1']) }}>
     @foreach (Locale::cases() as $copyLocale)
         @if ($copyLocale !== $locale)

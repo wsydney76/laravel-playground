@@ -1,3 +1,9 @@
+@php
+    use App\Models\Homepage;
+    /** @var Homepage $page */
+    /** @var int $articlesCount */
+@endphp
+
 <x-layouts::app :title="$page->sitename">
     <div class="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div class="md:col-span-1">

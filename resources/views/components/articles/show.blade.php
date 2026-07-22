@@ -1,6 +1,11 @@
 @props([
-    /**@var\App\Models\Article*/'article',
+    'article',
 ])
+
+@php
+    use App\Models\Article;
+    /** @var Article $article */
+@endphp
 
 <div {{ $attributes->class(['space-y-6']) }}>
     @if ($article->hasMedia('featured_image'))

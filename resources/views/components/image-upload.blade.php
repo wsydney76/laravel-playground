@@ -1,32 +1,23 @@
 @props([
-    /**
-     * A model that implements HasMedia (e.g. Article, User).
-     * Pass null when creating a new record.
-     *
-     * @var \Spatie\MediaLibrary\HasMedia|null
-     */
     'model' => null,
-
-    /** Spatie MediaLibrary collection name, e.g. 'featured_image'. */
     'collection',
-
-    /** HTML <input name="..."> used for the file field and the delete checkbox. */
     'name',
-
-    /** Visible label rendered above the card. */
     'label' => null,
-
-    /** Conversion name used for the preview thumbnail. */
     'thumbConversion' => 'thumb',
-
-    /** Accepted MIME types for the file picker. */
     'accept' => 'image/jpeg,image/png,image/webp',
 ])
 
 @php
-    $hasMedia     = $model?->hasMedia($collection);
-    $deleteName   = 'delete_' . $name;
-    $deleteOld    = old($deleteName);
+    use Spatie\MediaLibrary\HasMedia;
+    /** @var HasMedia|null $model */
+    /** @var string $collection */
+    /** @var string $name */
+    /** @var string|null $label */
+    /** @var string $thumbConversion */
+    /** @var string $accept */
+    $hasMedia = $model?->hasMedia($collection);
+    $deleteName = 'delete_' . $name;
+    $deleteOld = old($deleteName);
 @endphp
 
 @if ($label)
@@ -35,7 +26,6 @@
 
 <flux:card class="mt-2">
     <div class="flex items-start gap-8">
-
         {{-- Current image preview --}}
         @if ($hasMedia)
             <div>
@@ -49,12 +39,7 @@
 
         {{-- File picker --}}
         <div>
-            <flux:input
-                :id="$name"
-                :name="$name"
-                type="file"
-                :accept="$accept"
-            />
+            <flux:input :id="$name" :name="$name" type="file" :accept="$accept" />
             @error($name)
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
@@ -74,7 +59,5 @@
                 </p>
             </div>
         @endif
-
     </div>
 </flux:card>
-

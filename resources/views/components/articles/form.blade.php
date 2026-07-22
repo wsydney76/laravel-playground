@@ -9,6 +9,15 @@
     'cancelHref',
 ])
 
+@php
+    use App\Models\Article;
+    /** @var string $action */
+    /** @var string $method */
+    /** @var Article|null $article */
+    /** @var string $submitLabel */
+    /** @var string $cancelHref */
+@endphp
+
 <form method="POST" class="max-w-3xl" action="{{ $action }}" enctype="multipart/form-data">
     @if ($errors->any())
         <flux:callout variant="danger" class="mb-6">

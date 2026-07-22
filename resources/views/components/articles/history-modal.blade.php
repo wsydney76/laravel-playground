@@ -55,6 +55,7 @@ new class extends Component {
                                 @if ($history->action === ArticleAction::ChangeState && $history->value)
                                     @php
                                         $state = State::tryFrom($history->value);
+                                        /** @var State|null $state */
                                     @endphp
 
                                     @if ($state)

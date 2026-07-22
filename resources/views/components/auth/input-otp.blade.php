@@ -3,6 +3,11 @@
     'name' => 'code',
 ])
 
+@php
+    /** @var int $digits */
+    /** @var string $name */
+@endphp
+
 <div
     @focus-2fa-auth-code.window="$refs.input1?.focus()"
     @clear-2fa-auth-code.window="clearAll()"

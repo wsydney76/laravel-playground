@@ -25,6 +25,7 @@
                         '$1' . $locale->value . '$2',
                         $currentUrl,
                     );
+                    /** @var string|null $switchedUrl */
                 @endphp
 
                 <a

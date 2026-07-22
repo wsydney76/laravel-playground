@@ -1,5 +1,8 @@
 @php
     use App\Models\Homepage;
+    /** @var Homepage|null $homepage */
+    /** @var string $title */
+    /** @var \Illuminate\View\ComponentSlot|null $titleactions */
 @endphp
 
 @props([

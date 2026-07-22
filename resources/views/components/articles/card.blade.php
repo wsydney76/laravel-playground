@@ -4,6 +4,11 @@
     'article',
 ])
 
+@php
+    use App\Models\Article;
+    /** @var Article $article */
+@endphp
+
 <flux:card {{ $attributes->class(['flex flex-col overflow-hidden p-0']) }}>
     @if ($article->hasMedia('featured_image'))
         <a href="{{ $article->url }}" class="block shrink-0 overflow-hidden">

@@ -4,6 +4,14 @@
     'states' => [],
 ])
 
+@php
+    use App\Enums\State;
+    use App\Models\User;
+    /** @var bool $isAdmin */
+    /** @var array<int, User> $users */
+    /** @var array<int, State> $states */
+@endphp
+
 <div {{ $attributes->class(['mb-4 flex gap-3']) }}>
     @if ($isAdmin)
         <flux:select wire:model.live="filterUser">
