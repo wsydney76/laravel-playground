@@ -34,6 +34,8 @@ A lot of small improvements including
 * Database seed now clears existing media files via `media:clear-uploads` command.
 * Copy translatable content from one language to another.
 
+## Laravel Playground: 2.2.0
+
 ### Laravel Custom
 
 Maybe all of this escalated a bit, so not very useful for beginners anymore.
@@ -60,6 +62,7 @@ composer install &&
 composer run setup &&
 artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations"
 artisan migrate:fresh --seed &&
+artisan storage:link
 ```
 
 Adjust the `.env` file to your needs.

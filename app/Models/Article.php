@@ -89,11 +89,22 @@ class Article extends Model implements HasMedia
             'image/png',
             'image/webp',
         ]);
+
+        $this->addMediaCollection('gallery')->acceptsMimeTypes([
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+        ]);
     }
 
     public function registerMediaConversions($media = null): void
     {
         $this->addMediaConversion('featured')->fit(Fit::Crop, 1024, 350)->nonQueued();
         $this->addMediaConversion('thumb')->fit(Fit::Crop, 300, 200)->nonQueued();
+    }
+
+    public function getFeaturedImageUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('featured_image', 'featured');
     }
 }

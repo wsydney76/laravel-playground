@@ -13,5 +13,6 @@ ddev composer install &&
 ddev composer run setup &&
 ddev artisan vendor:publish --provider="Spatie\MediaLibrary\MediaLibraryServiceProvider" --tag="medialibrary-migrations"
 ddev artisan migrate:fresh --seed &&
+ddev artisan storage:link &&
 ddev describe &&
 ddev launch

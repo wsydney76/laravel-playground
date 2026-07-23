@@ -20,7 +20,7 @@ class StoreArticleRequest extends FormRequest
             'title.*' => ['required', 'string', 'min:10', 'max:255'],
             'slug.*' => ['nullable', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             'body.*' => ['required', 'string'],
-            'featured_image' => ['nullable', 'image', 'max:10000'],
+
             'state' => ['nullable', Rule::enum(State::class)],
         ];
     }

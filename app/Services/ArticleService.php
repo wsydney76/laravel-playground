@@ -72,12 +72,15 @@ class ArticleService
         array $data,
         UploadedFile|string|null $featuredImage = null,
         bool $deleteFeaturedImage = false,
+        array $galleryFiles = [],
+        array $galleryDeleteIds = [],
     ): Article {
         $data = $this->normalizeTranslatableFields($data, $article->id);
 
         $article->update($data);
 
         $this->syncMedia($article, 'featured_image', $featuredImage, $deleteFeaturedImage);
+        $this->syncMediaMultiple($article, 'gallery', $galleryFiles, $galleryDeleteIds);
 
         $this->recordHistory($article, auth()->user(), ArticleAction::Update, $article->title);
 

@@ -84,7 +84,6 @@
                         >
                             {{ old('body.' . $locale->value, $article?->getTranslation('body', $locale->value)) }}
 
-
                         </flux:textarea>
                         <flux:error name="body.{{ $locale->value }}" />
 
@@ -114,11 +113,19 @@
         </div>
     </div>
 
-    <x-image-upload
+    <livewire:articles.image-upload
         :model="$article"
         collection="featured_image"
         name="featured_image"
         :label="__('Featured Image')"
+    />
+
+    <livewire:articles.image-upload
+        :model="$article"
+        collection="gallery"
+        name="gallery"
+        :label="__('Gallery')"
+        :multiple="true"
     />
 
     <div class="mt-8 flex gap-3">

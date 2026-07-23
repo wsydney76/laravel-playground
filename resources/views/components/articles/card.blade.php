@@ -10,10 +10,10 @@
 @endphp
 
 <flux:card {{ $attributes->class(['flex flex-col overflow-hidden p-0']) }}>
-    @if ($article->hasMedia('featured_image'))
+    @if ($url = $article->featured_image_url)
         <a href="{{ $article->url }}" class="block shrink-0 overflow-hidden">
             <img
-                src="{{ $article->getFirstMediaUrl('featured_image', 'featured') }}"
+                src="{{ $url }}"
                 alt="{{ $article->title }}"
                 class="h-48 w-full object-cover transition-transform duration-300 hover:scale-102"
             />
