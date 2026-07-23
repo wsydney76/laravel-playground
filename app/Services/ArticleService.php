@@ -48,8 +48,11 @@ class ArticleService
         return $data;
     }
 
-    public function create(User $author, array $data, ?UploadedFile $featuredImage = null): Article
-    {
+    public function create(
+        User $author,
+        array $data,
+        UploadedFile|string|null $featuredImage = null,
+    ): Article {
         $data = $this->normalizeTranslatableFields($data);
         $data['creator_id'] = $author->id;
 
@@ -67,7 +70,7 @@ class ArticleService
     public function update(
         Article $article,
         array $data,
-        ?UploadedFile $featuredImage = null,
+        UploadedFile|string|null $featuredImage = null,
         bool $deleteFeaturedImage = false,
     ): Article {
         $data = $this->normalizeTranslatableFields($data, $article->id);

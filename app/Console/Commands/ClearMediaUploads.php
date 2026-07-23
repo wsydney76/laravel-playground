@@ -32,6 +32,11 @@ class ClearMediaUploads extends Command
         // Clear conversions from the public dist disk (public/dist/conversions)
         $this->clearDirectory(disk: 'dist', path: 'conversions');
 
+        // Clear Livewire temporary file uploads
+        $livewireDisk = config('livewire.temporary_file_upload.disk') ?? config('filesystems.default');
+        $livewireDirectory = config('livewire.temporary_file_upload.directory') ?? 'livewire-tmp';
+        $this->clearDirectory(disk: $livewireDisk, path: $livewireDirectory);
+
         $this->info('Media uploads and conversions cleared.');
     }
 

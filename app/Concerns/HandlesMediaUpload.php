@@ -16,7 +16,7 @@ trait HandlesMediaUpload
     public function syncMedia(
         HasMedia $model,
         string $collection,
-        ?UploadedFile $file,
+        string|UploadedFile|null $file,
         bool $delete = false,
     ): void {
         if ($file) {

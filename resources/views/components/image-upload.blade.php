@@ -27,22 +27,15 @@
 <flux:card size="sm" class="mt-2">
     <div class="flex items-start gap-8">
         {{-- File picker --}}
-        <div>
-            <flux:input
-                :label="$hasMedia ? __('Replace image') : __('Upload image')"
-                :id="$name"
-                :name="$name"
-                type="file"
-                :accept="$accept"
-            />
-            @error($name)
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+        <livewire:articles.select-image
+            :label="$hasMedia ? __('Replace image') : __('Upload image')"
+            :filepath="old('filepath', '')"
+        />
     </div>
 
     @if ($hasMedia)
         {{-- Delete checkbox (only when an image already exists) --}}
+        <flux:label class="mt-4">Current image</flux:label>
         @php($file = $model->getFirstMedia($collection))
         <flux:file-item
             class="mt-4"

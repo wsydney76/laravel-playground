@@ -31,8 +31,8 @@ class ArticleController extends Controller
     {
         $article = $this->articleService->create(
             $request->user(),
-            $request->safe()->except('featured_image'),
-            $request->file('featured_image'),
+            $request->safe()->except('featured_image', 'filepath'),
+            $request->filepath,
         );
 
         return $this->redirectToArticle(
@@ -64,8 +64,8 @@ class ArticleController extends Controller
     {
         $this->articleService->update(
             $article,
-            $request->safe()->except(['featured_image', 'delete_featured_image']),
-            $request->file('featured_image'),
+            $request->safe()->except(['featured_image', 'delete_featured_image', 'filepath']),
+            $request->filepath,
             $request->boolean('delete_featured_image'),
         );
 
