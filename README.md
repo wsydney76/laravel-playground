@@ -36,6 +36,8 @@ A lot of small improvements including
 
 ## Laravel Playground: 2.2.0
 
+* Support multi-files uploads in the media library form component.
+
 ### Laravel Custom
 
 Maybe all of this escalated a bit, so not very useful for beginners anymore.
