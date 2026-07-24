@@ -39,7 +39,14 @@
         @method($method)
     @endif
 
-    <flux:card class="mt-2 bg-sky-100 p-2 dark:border-sky-700 dark:bg-sky-900">
+    <livewire:articles.image-upload
+        :model="$article"
+        collection="featured_image"
+        name="featured_image"
+        :label="__('Featured Image')"
+    />
+
+    <flux:card class="mt-6 bg-sky-100 p-2 dark:border-sky-700 dark:bg-sky-900">
         <flux:tab.group>
             <flux:tabs>
                 @foreach (Locale::cases() as $locale)
@@ -84,6 +91,7 @@
                         >
                             {{ old('body.' . $locale->value, $article?->getTranslation('body', $locale->value)) }}
 
+
                         </flux:textarea>
                         <flux:error name="body.{{ $locale->value }}" />
 
@@ -113,20 +121,15 @@
         </div>
     </div>
 
-    <livewire:articles.image-upload
-        :model="$article"
-        collection="featured_image"
-        name="featured_image"
-        :label="__('Featured Image')"
-    />
-
-    <livewire:articles.image-upload
-        :model="$article"
-        collection="gallery"
-        name="gallery"
-        :label="__('Gallery')"
-        :multiple="true"
-    />
+    <div class="mt-6">
+        <livewire:articles.image-upload
+            :model="$article"
+            collection="gallery"
+            name="gallery"
+            :label="__('Gallery')"
+            multiple
+        />
+    </div>
 
     <div class="mt-8 flex gap-3">
         <flux:button size="sm" variant="primary" color="sky" type="submit">
