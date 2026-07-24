@@ -64,11 +64,12 @@ class ArticleController extends Controller
     {
         $this->articleService->update(
             $article,
-            $request->safe()->except(['featured_image', 'delete_featured_image', 'gallery', 'delete_gallery']),
+            $request->safe()->except(['featured_image', 'delete_featured_image', 'gallery', 'delete_gallery', 'sort_gallery']),
             $request->featured_image,
             $request->boolean('delete_featured_image'),
             $request->input('gallery', []),
             $request->input('delete_gallery', []),
+            $request->input('sort_gallery', []),
         );
 
         return $this->redirectToArticle(

@@ -5,6 +5,7 @@ namespace App\Concerns;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 trait HandlesMediaUpload
 {
@@ -41,17 +42,21 @@ trait HandlesMediaUpload
      * Sync a multi-file media collection on a model:
      *  - Delete individual items whose IDs appear in $deleteIds.
      *  - Append every file in $files to the collection.
+     *  - Reorder surviving + new items according to $sortedIds (existing IDs in
+     *    the desired order); newly uploaded files are appended after them.
      *
-     * Pass an empty $files array and no $deleteIds to leave the collection untouched.
+     * Pass an empty $files array and no $deleteIds/$sortedIds to leave the collection untouched.
      *
-     * @param array<string|UploadedFile> $files     New files to add (basename strings or UploadedFile instances).
-     * @param array<int|string>          $deleteIds IDs of existing media items to remove.
+     * @param array<string|UploadedFile> $files      New files to add (basename strings or UploadedFile instances).
+     * @param array<int|string>          $deleteIds  IDs of existing media items to remove.
+     * @param array<int|string>          $sortedIds  Existing media IDs in the desired display order.
      */
     public function syncMediaMultiple(
         HasMedia $model,
         string $collection,
         array $files = [],
         array $deleteIds = [],
+        array $sortedIds = [],
     ): void {
         // Remove individually selected items
         if (!empty($deleteIds)) {
@@ -73,6 +78,29 @@ trait HandlesMediaUpload
             }
 
             $model->addMedia($file)->toMediaCollection($collection);
+        }
+
+        // Reorder: surviving sorted IDs first, then any newly uploaded IDs appended
+        if (!empty($sortedIds)) {
+            $deletedIds = array_map('intval', $deleteIds);
+
+            $orderedIds = array_values(array_filter(
+                array_map('intval', $sortedIds),
+                fn ($id) => !in_array($id, $deletedIds),
+            ));
+
+            // IDs that were not part of the original sort list (= just uploaded)
+            $knownIds   = array_map('intval', $sortedIds);
+            $newIds     = $model->getMedia($collection)
+                ->filter(fn ($m) => !in_array($m->id, $knownIds))
+                ->pluck('id')
+                ->toArray();
+
+            $finalOrder = array_merge($orderedIds, $newIds);
+
+            if (!empty($finalOrder)) {
+                Media::setNewOrder($finalOrder);
+            }
         }
     }
 }

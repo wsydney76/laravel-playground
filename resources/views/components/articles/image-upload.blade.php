@@ -78,6 +78,21 @@ new class extends Component {
         }
     }
 
+    // ── Sorting (multiple mode) ──────────────────────────────────────────────
+
+    public function reorderExistingFiles(mixed $id, int $position): void
+    {
+        $intId = (int) $id;
+        $currentIndex = array_search($intId, array_column($this->existingFiles, 'id'));
+
+        if ($currentIndex === false) {
+            return;
+        }
+
+        $item = array_splice($this->existingFiles, $currentIndex, 1)[0];
+        array_splice($this->existingFiles, $position, 0, [$item]);
+    }
+
     // ── Single-file hooks ────────────────────────────────────────────────────
 
     public function removePhoto(int $index = -1): void
@@ -257,21 +272,33 @@ new class extends Component {
 
         {{-- ── Existing media ─────────────────────────────────────────────── --}}
         @if ($multiple && count($existingFiles))
-            <flux:label class="mt-4">{{ __('Current images') }}</flux:label>
+            {{-- Submit the current (possibly reordered) IDs so the controller can persist the order --}}
             @foreach ($existingFiles as $file)
-                <flux:file-item class="mt-4" :heading="$file['name']" :image="$file['url']">
-                    <x-slot name="actions">
-                        <div class="pt-1 pr-2">
-                            <flux:checkbox
-                                :label="__('Delete')"
-                                :name="$deleteName . '[]'"
-                                :value="$file['id']"
-                                :checked="is_array($deleteOld) && in_array((string) $file['id'], array_map('strval', $deleteOld))"
-                            />
-                        </div>
-                    </x-slot>
-                </flux:file-item>
+                <input type="hidden" name="sort_{{ $name }}[]" value="{{ $file['id'] }}" />
             @endforeach
+
+            <flux:label class="mt-4">{{ __('Current images') }}</flux:label>
+            <div wire:sort="reorderExistingFiles">
+                @foreach ($existingFiles as $file)
+                    <div wire:sort:item="{{ $file['id'] }}" wire:key="existing-{{ $file['id'] }}" class="mt-4">
+                        <flux:file-item :heading="$file['name']" :image="$file['url']">
+                            <x-slot name="actions">
+                                <div class="flex items-center gap-3 pt-1 pr-2">
+                                    <div wire:sort:handle class="cursor-grab text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300" title="{{ __('Drag to reorder') }}">
+                                        <flux:icon.bars-3 variant="micro" />
+                                    </div>
+                                    <flux:checkbox
+                                        :label="__('Delete')"
+                                        :name="$deleteName . '[]'"
+                                        :value="$file['id']"
+                                        :checked="is_array($deleteOld) && in_array((string) $file['id'], array_map('strval', $deleteOld))"
+                                    />
+                                </div>
+                            </x-slot>
+                        </flux:file-item>
+                    </div>
+                @endforeach
+            </div>
         @elseif (! $multiple && $hasMedia)
             <flux:label class="mt-4">{{ __('Current image') }}</flux:label>
             <flux:file-item class="mt-4" :heading="$existingFileName" :image="$existingFileUrl">
