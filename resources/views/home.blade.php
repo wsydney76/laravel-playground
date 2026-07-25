@@ -28,8 +28,13 @@
                 @endif
             </div>
         </div>
-        <div class="prose max-w-none md:col-span-3 dark:prose-invert">
-            {!! nl2br(e($page->homepagetext)) !!}
+        <div class="space-y-8 md:col-span-3">
+            <div class="prose max-w-none dark:prose-invert">
+                {!! nl2br(e($page->homepagetext)) !!}
+            </div>
+            <div>
+                <x-articles.featured-article :$featuredArticle />
+            </div>
         </div>
     </div>
 </x-layouts::app>

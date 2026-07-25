@@ -30,12 +30,7 @@
         <flux:text>{{ Str::limit($article->body, 120, preserveWords: true) }}</flux:text>
 
         <div class="flex items-center justify-between">
-            <flux:text size="sm">
-                <span>{{ $article->user->name }},</span>
-                <span title="{{ $article->created_at->toFormattedDateString() }}">
-                    {{ $article->created_at->diffForHumans() }}
-                </span>
-            </flux:text>
+            <x-articles.meta :article="$article" />
 
             @can('update', $article)
                 <flux:button

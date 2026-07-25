@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\View\Composers\FeaturedArticleComposer;
 use Carbon\CarbonImmutable;
 use App\Models\Homepage;
 use Illuminate\Database\Eloquent\Model;

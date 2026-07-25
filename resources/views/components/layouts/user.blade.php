@@ -50,9 +50,15 @@
 
                     <flux:menu.separator />
 
-                    <flux:menu.item :href="route('profile.edit')" icon="cog-8-tooth" wire:navigate>
-                        {{ __('Settings') }}
-                    </flux:menu.item>
+                    @if (Route::has('profile.edit'))
+                        <flux:menu.item
+                            :href="route('profile.edit')"
+                            icon="cog-8-tooth"
+                            wire:navigate
+                        >
+                            {{ __('Settings') }}
+                        </flux:menu.item>
+                    @endif
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

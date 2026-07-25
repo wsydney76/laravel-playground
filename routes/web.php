@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('{locale}')
     ->middleware('locale')
     ->group(function () {
-        Route::get('/', [HomeController::class, 'show'])->name('home');
+        Route::get('', [HomeController::class, 'show'])->name('home');
         Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
         Route::get('articles/{article}/{slug}', [ArticleController::class, 'show'])->name(
             'articles.show',
