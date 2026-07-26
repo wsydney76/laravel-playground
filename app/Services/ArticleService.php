@@ -81,7 +81,13 @@ class ArticleService
         $article->update($data);
 
         $this->syncMedia($article, 'featured_image', $featuredImage, $deleteFeaturedImage);
-        $this->syncMediaMultiple($article, 'gallery', $galleryFiles, $galleryDeleteIds, $gallerySortedIds);
+        $this->syncMediaMultiple(
+            $article,
+            'gallery',
+            $galleryFiles,
+            $galleryDeleteIds,
+            $gallerySortedIds,
+        );
 
         $this->recordHistory($article, auth()->user(), ArticleAction::Update, $article->title);
 
@@ -156,5 +162,10 @@ class ArticleService
             'action' => $action->value,
             'value' => $value,
         ]);
+    }
+
+    public function getFeaturedArticle(): ?Article
+    {
+        return Article::inRandomOrder()->first();
     }
 }
