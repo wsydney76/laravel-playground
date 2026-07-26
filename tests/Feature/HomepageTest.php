@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Articles;
 use App\Models\Article;
 use App\Models\Homepage;
 use App\Models\User;
@@ -10,13 +11,22 @@ beforeEach(function () {
 
 it('returns redirect without URI', function () {
     $response = $this->get('/');
-
-    $response->assertRedirect();
+    $response->assertRedirect('/en');
 });
 
 it('returns a successful response', function () {
     $response = $this->get('/en');
     $response->assertOk();
+});
+
+it('returns a successful response (de)', function () {
+    $response = $this->get('/de');
+    $response->assertOk();
+});
+
+it('returns a 404 response for nonexistent locale', function () {
+    $response = $this->get('/nonexistent');
+    $response->assertNotFound();
 });
 
 it('passes correct articles count to view, acting as guest', function () {

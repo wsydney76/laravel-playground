@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\Homepage;
+use App\Services\ArticleService;
 use App\View\Composers\FeaturedArticleComposer;
 use Carbon\CarbonImmutable;
-use App\Models\Homepage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Livewire\Blaze\Blaze;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(ArticleService::class);
     }
 
     /**
