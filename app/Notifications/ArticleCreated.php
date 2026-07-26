@@ -32,7 +32,6 @@ class ArticleCreated extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('articles.show', ['article' => $this->article]);
         return (new MailMessage())
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line(
@@ -41,7 +40,7 @@ class ArticleCreated extends Notification
                     ': ' .
                     $this->article->title,
             )
-            ->action('Review it', $url)
+            ->action('Review it', $this->article->url)
             ->line('Thank you for using our application!');
     }
 

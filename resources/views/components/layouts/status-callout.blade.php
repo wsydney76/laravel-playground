@@ -1,7 +1,7 @@
 @session('status')
     <div
         x-data="{ show: true }"
-        x-init="setTimeout(() => (show = false), 2000)"
+        x-init="setTimeout(() => (show = false), 5000)"
         x-show="show"
         x-transition:leave="transition duration-1200 ease-in"
         x-transition:leave-start="opacity-100"

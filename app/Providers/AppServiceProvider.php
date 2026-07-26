@@ -6,7 +6,9 @@ use App\Models\Homepage;
 use App\Services\ArticleService;
 use App\View\Composers\FeaturedArticleComposer;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -40,6 +42,17 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Blaze::debug();
+
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new MailMessage())
+                ->subject('Verify Your Email Address')
+                ->line('Please click the button below to verify your email address.')
+                ->action('Verify Email Address', $url)
+                ->line('If you did not create an account, no further action is required.')
+                ->line(
+                    'Please note that you need to verify your email before you can create articles.',
+                );
+        });
     }
 
     /**
