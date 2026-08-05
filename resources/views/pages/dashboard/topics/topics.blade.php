@@ -25,6 +25,7 @@
                 <flux:table.columns>
                     <flux:table.column>{{ __('Image') }}</flux:table.column>
                     <flux:table.column>{{ __('Title') }}</flux:table.column>
+                    <flux:table.column>{{ __('Color') }}</flux:table.column>
                     <flux:table.column>{{ __('Articles') }}</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
@@ -41,6 +42,10 @@
 
                         <flux:table.cell>
                             <flux:text class="font-medium">{{ $topic->title }}</flux:text>
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            <flux:badge :color="$topic->color->value" size="sm">{{ $topic->color->label() }}</flux:badge>
                         </flux:table.cell>
 
                         <flux:table.cell>
@@ -85,6 +90,18 @@
                 <flux:error name="newTitle" />
 
                 <div>
+                    <flux:select wire:model.live="newColor" :label="__('Color')">
+                        @foreach ($this->colors as $color)
+                            <flux:select.option value="{{ $color->value }}">{{ $color->label() }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="newColor" />
+                    <div class="mt-2">
+                        <flux:badge :color="$newColor" size="sm">{{ __('Preview') }}</flux:badge>
+                    </div>
+                </div>
+
+                <div>
                     <flux:label>{{ __('Featured Image') }}</flux:label>
                     <flux:file-upload wire:model="newImage" :label="__('Upload image')" class="mt-1">
                         <flux:file-upload.dropzone
@@ -118,6 +135,18 @@
                     autofocus
                 />
                 <flux:error name="editTitle" />
+
+                <div>
+                    <flux:select wire:model.live="editColor" :label="__('Color')">
+                        @foreach ($this->colors as $color)
+                            <flux:select.option value="{{ $color->value }}">{{ $color->label() }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="editColor" />
+                    <div class="mt-2">
+                        <flux:badge :color="$editColor" size="sm">{{ __('Preview') }}</flux:badge>
+                    </div>
+                </div>
 
                 <div>
                     <flux:label>{{ __('Featured Image') }}</flux:label>

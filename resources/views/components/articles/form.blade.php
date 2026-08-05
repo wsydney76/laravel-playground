@@ -92,7 +92,6 @@
                         >
                             {{ old('body.' . $locale->value, $article?->getTranslation('body', $locale->value)) }}
 
-
                         </flux:textarea>
                         <flux:error name="body.{{ $locale->value }}" />
 
@@ -126,20 +125,22 @@
                 $allTopics = Topic::orderBy('title')->get();
                 $selectedTopicIds = old('topics', $article?->topics?->pluck('id')->toArray() ?? []);
             @endphp
+
             <flux:label>{{ __('Topics') }}</flux:label>
             <div class="mt-1 space-y-1">
-                <div>
-                    <flux:select.option value="" disabled>{{ __('— none —') }}</flux:select.option>
-                </div>
                 @foreach ($allTopics as $topic)
-                    <div class="flex items-center gap-2">
-                        <flux:checkbox
-                            name="topics[]"
-                            value="{{ $topic->id }}"
-                            id="topic-{{ $topic->id }}"
-                            :checked="in_array($topic->id, array_map('intval', $selectedTopicIds))"
-                        />
-                        <flux:label for="topic-{{ $topic->id }}">{{ $topic->title }}</flux:label>
+                    <div class="space-y-8">
+                        <flux:label for="topic-{{ $topic->id }}">
+                            <flux:badge color="{{ $topic->color }}" class="flex gap-2">
+                                <flux:checkbox
+                                    name="topics[]"
+                                    value="{{ $topic->id }}"
+                                    id="topic-{{ $topic->id }}"
+                                    :checked="in_array($topic->id, array_map('intval', $selectedTopicIds))"
+                                />
+                                {{ $topic->title }}
+                            </flux:badge>
+                        </flux:label>
                     </div>
                 @endforeach
             </div>

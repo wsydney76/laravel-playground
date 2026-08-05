@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BadgeColor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Image\Enums\Fit;
@@ -13,6 +14,13 @@ class Topic extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'color' => BadgeColor::class,
+        ];
+    }
 
     public function articles(): BelongsToMany
     {

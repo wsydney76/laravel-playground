@@ -25,7 +25,7 @@
             <div class="flex flex-wrap gap-2">
                 @foreach ($article->topics as $topic)
                     <a href="{{ $topic->url }}">
-                        <flux:badge color="sky" size="sm">{{ $topic->title }}</flux:badge>
+                        <flux:badge :color="$topic->color->value" size="sm">{{ $topic->title }}</flux:badge>
                     </a>
                 @endforeach
             </div>

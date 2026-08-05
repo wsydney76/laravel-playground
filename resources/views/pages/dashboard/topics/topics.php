@@ -1,6 +1,7 @@
 <?php
 
 use App\Concerns\HandlesMediaUpload;
+use App\Enums\BadgeColor;
 use App\Models\Topic;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Title;
@@ -15,11 +16,13 @@ new #[Title('Dashboard - Topics')] class extends Component {
 
     // ── Create form ──────────────────────────────────────────────────────────
     public string $newTitle = '';
+    public string $newColor = 'sky';
     public ?TemporaryUploadedFile $newImage = null;
 
     // ── Edit form ────────────────────────────────────────────────────────────
     public ?int $editingId = null;
     public string $editTitle = '';
+    public string $editColor = 'sky';
     public ?TemporaryUploadedFile $editImage = null;
     public bool $deleteEditImage = false;
 
@@ -34,31 +37,39 @@ new #[Title('Dashboard - Topics')] class extends Component {
         return Topic::withCount('articles')->orderBy('title')->get();
     }
 
+    #[Computed]
+    public function colors(): array
+    {
+        return BadgeColor::cases();
+    }
+
     // ── Create ───────────────────────────────────────────────────────────────
 
     public function createTopic(): void
     {
         $this->authorize('administer', \App\Models\Article::class);
 
-        $validated = $this->validate(
-            [
-                'newTitle' => ['required', 'string', 'max:255', 'unique:topics,title'],
-                'newImage' => ['nullable', 'image', 'max:10240'],
-            ],
-            [],
-            [
-                'newTitle' => __('Title'),
-                'newImage' => __('Featured Image'),
-            ],
-        );
+        $validated = $this->validate([
+            'newTitle' => ['required', 'string', 'max:255', 'unique:topics,title'],
+            'newColor' => ['required', 'string', \Illuminate\Validation\Rule::enum(BadgeColor::class)],
+            'newImage' => ['nullable', 'image', 'max:10240'],
+        ], [], [
+            'newTitle' => __('Title'),
+            'newColor' => __('Color'),
+            'newImage' => __('Featured Image'),
+        ]);
 
-        $topic = Topic::create(['title' => $validated['newTitle']]);
+        $topic = Topic::create([
+            'title' => $validated['newTitle'],
+            'color' => $validated['newColor'],
+        ]);
 
         if ($this->newImage) {
             $this->syncMedia($topic, 'featured_image', $this->newImage->getRealPath());
         }
 
         $this->reset('newTitle', 'newImage');
+        $this->newColor = 'sky';
         $this->modal('create-topic')->close();
 
         unset($this->topics);
@@ -74,6 +85,7 @@ new #[Title('Dashboard - Topics')] class extends Component {
 
         $this->editingId = $topic->id;
         $this->editTitle = $topic->title;
+        $this->editColor = $topic->color->value;
         $this->editImage = null;
         $this->deleteEditImage = false;
 
@@ -86,33 +98,25 @@ new #[Title('Dashboard - Topics')] class extends Component {
 
         $topic = Topic::findOrFail($this->editingId);
 
-        $validated = $this->validate(
-            [
-                'editTitle' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'unique:topics,title,' . $this->editingId,
-                ],
-                'editImage' => ['nullable', 'image', 'max:10240'],
-            ],
-            [],
-            [
-                'editTitle' => __('Title'),
-                'editImage' => __('Featured Image'),
-            ],
-        );
+        $validated = $this->validate([
+            'editTitle' => ['required', 'string', 'max:255', 'unique:topics,title,' . $this->editingId],
+            'editColor' => ['required', 'string', \Illuminate\Validation\Rule::enum(BadgeColor::class)],
+            'editImage' => ['nullable', 'image', 'max:10240'],
+        ], [], [
+            'editTitle' => __('Title'),
+            'editColor' => __('Color'),
+            'editImage' => __('Featured Image'),
+        ]);
 
-        $topic->update(['title' => $validated['editTitle']]);
+        $topic->update([
+            'title' => $validated['editTitle'],
+            'color' => $validated['editColor'],
+        ]);
 
-        $this->syncMedia(
-            $topic,
-            'featured_image',
-            $this->editImage?->getRealPath(),
-            $this->deleteEditImage,
-        );
+        $this->syncMedia($topic, 'featured_image', $this->editImage?->getRealPath(), $this->deleteEditImage);
 
         $this->reset('editingId', 'editTitle', 'editImage', 'deleteEditImage');
+        $this->editColor = 'sky';
         $this->modal('edit-topic')->close();
 
         unset($this->topics);
