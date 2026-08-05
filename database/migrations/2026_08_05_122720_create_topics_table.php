@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->json('title');
             $table->string('color')->default('sky');
             $table->timestamps();
         });

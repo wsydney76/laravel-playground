@@ -9,12 +9,12 @@ class TopicController extends Controller
 {
     public function index(): View
     {
-        $topics = Topic::withCount('articles')->orderBy('title')->get();
+        $topics = Topic::withCount('articles')->orderByRaw("JSON_EXTRACT(title, '$.en')")->get();
 
         return view('topics.index', compact('topics'));
     }
 
-    public function show(string $locale, Topic $topic): View
+    public function show(string $locale, Topic $topic, string $slug): View
     {
         $articles = $topic
             ->articles()

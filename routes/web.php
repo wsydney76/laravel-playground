@@ -47,7 +47,7 @@ Route::prefix('{locale}')
         Route::get('articles/my', [ArticleController::class, 'my'])->name('articles.my');
         Route::livewire('articles/search', 'articles.search')->name('articles.search');
         Route::get('topics', [TopicController::class, 'index'])->name('topics.index');
-        Route::get('topics/{topic}', [TopicController::class, 'show'])->name('topics.show');
+        Route::get('topics/{topic}/{slug}', [TopicController::class, 'show'])->name('topics.show');
     });
 
 Route::get('test/{template}', function (string $template) {

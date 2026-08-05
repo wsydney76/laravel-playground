@@ -9,10 +9,14 @@ class TopicSeeder extends Seeder
 {
     public function run(): void
     {
-        $titles = ['Politics' => 'blue', 'Sport' => 'green', 'Entertainment' => 'red'];
+        $topics = [
+            ['title' => ['en' => 'Politics',      'de' => 'Politik'],      'slug' => ['en' => 'politics',      'de' => 'politik'],      'color' => 'blue'],
+            ['title' => ['en' => 'Sport',          'de' => 'Sport'],         'slug' => ['en' => 'sport',          'de' => 'sport'],         'color' => 'green'],
+            ['title' => ['en' => 'Entertainment',  'de' => 'Unterhaltung'],  'slug' => ['en' => 'entertainment',  'de' => 'unterhaltung'],  'color' => 'red'],
+        ];
 
-        foreach ($titles as $title => $color) {
-            Topic::firstOrCreate(['title' => $title, 'color' => $color]);
+        foreach ($topics as $data) {
+            Topic::create($data);
         }
     }
 }

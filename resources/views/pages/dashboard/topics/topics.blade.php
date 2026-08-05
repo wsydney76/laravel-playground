@@ -82,12 +82,35 @@
 
             <form wire:submit="createTopic" class="space-y-4">
                 <flux:input
-                    wire:model="newTitle"
-                    :label="__('Title')"
-                    :placeholder="__('Topic title')"
+                    wire:model="newTitle.en"
+                    :label="__('Title (EN)')"
+                    :placeholder="__('Topic title in English')"
                     autofocus
                 />
-                <flux:error name="newTitle" />
+                <flux:error name="newTitle.en" />
+
+                <flux:input
+                    wire:model="newSlug.en"
+                    :label="__('Slug (EN)')"
+                    :placeholder="__('a valid slug (optional)')"
+                    :description:trailing="__('If left empty, a slug will be automatically generated from the title.')"
+                />
+                <flux:error name="newSlug.en" />
+
+                <flux:input
+                    wire:model="newTitle.de"
+                    :label="__('Title (DE)')"
+                    :placeholder="__('Topic title in German')"
+                />
+                <flux:error name="newTitle.de" />
+
+                <flux:input
+                    wire:model="newSlug.de"
+                    :label="__('Slug (DE)')"
+                    :placeholder="__('a valid slug (optional)')"
+                    :description:trailing="__('If left empty, a slug will be automatically generated from the title.')"
+                />
+                <flux:error name="newSlug.de" />
 
                 <div>
                     <flux:select wire:model.live="newColor" :label="__('Color')">
@@ -130,11 +153,33 @@
 
             <form wire:submit="updateTopic" class="space-y-4">
                 <flux:input
-                    wire:model="editTitle"
-                    :label="__('Title')"
+                    wire:model="editTitle.en"
+                    :label="__('Title (EN)')"
                     autofocus
                 />
-                <flux:error name="editTitle" />
+                <flux:error name="editTitle.en" />
+
+                <flux:input
+                    wire:model="editSlug.en"
+                    :label="__('Slug (EN)')"
+                    :placeholder="__('a valid slug (optional)')"
+                    :description:trailing="__('If left empty, a slug will be automatically generated from the title.')"
+                />
+                <flux:error name="editSlug.en" />
+
+                <flux:input
+                    wire:model="editTitle.de"
+                    :label="__('Title (DE)')"
+                />
+                <flux:error name="editTitle.de" />
+
+                <flux:input
+                    wire:model="editSlug.de"
+                    :label="__('Slug (DE)')"
+                    :placeholder="__('a valid slug (optional)')"
+                    :description:trailing="__('If left empty, a slug will be automatically generated from the title.')"
+                />
+                <flux:error name="editSlug.de" />
 
                 <div>
                     <flux:select wire:model.live="editColor" :label="__('Color')">

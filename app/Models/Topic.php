@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Translatable\Attributes\Translatable;
+use Spatie\Translatable\HasTranslations;
 
+#[Translatable('title', 'slug')]
 class Topic extends Model implements HasMedia
 {
     use InteractsWithMedia;
+    use HasTranslations;
 
     protected $guarded = [];
 
@@ -27,11 +31,17 @@ class Topic extends Model implements HasMedia
         return $this->belongsToMany(Article::class);
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
+
     public function getUrlAttribute(): string
     {
         return route('topics.show', [
             'locale' => app()->getLocale(),
             'topic'  => $this->id,
+            'slug'   => $this->slug,
         ]);
     }
 
