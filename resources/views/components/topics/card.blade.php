@@ -20,9 +20,9 @@
 
     <div class="flex flex-1 flex-col gap-4 p-4">
         <a href="{{ $topic->url }}">
-            <flux:heading size="lg" class="hover:text-sky-700 hover:underline">
+            <flux:badge color="{{ $topic->color }}">
                 {{ $topic->title }}
-            </flux:heading>
+            </flux:badge>
         </a>
 
         <flux:text class="text-sm text-zinc-500">
@@ -30,4 +30,3 @@
         </flux:text>
     </div>
 </flux:card>
-

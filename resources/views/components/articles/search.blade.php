@@ -23,6 +23,7 @@ new class extends Component {
         }
 
         return Article::query()
+            ->with(['user', 'topics'])
             ->where('title->' . app()->getLocale(), 'like', "%{$this->search}%")
             ->orWhere('body->' . app()->getLocale(), 'like', "%{$this->search}%")
             ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$this->search}%"))

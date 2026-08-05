@@ -1,6 +1,5 @@
 @use('App\Enums\State')
 @use('App\Enums\Locale')
-@use('App\Models\Topic')
 
 @props([
     'action',
@@ -8,6 +7,7 @@
     'article' => null,
     'submitLabel',
     'cancelHref',
+    'allTopics',
 ])
 
 @php
@@ -122,7 +122,6 @@
 
         <div>
             @php
-                $allTopics = Topic::orderBy('title')->get();
                 $selectedTopicIds = old('topics', $article?->topics?->pluck('id')->toArray() ?? []);
             @endphp
 

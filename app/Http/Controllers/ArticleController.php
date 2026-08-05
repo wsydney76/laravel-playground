@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
+use App\Models\Topic;
 use App\Services\ArticleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -24,7 +25,9 @@ class ArticleController extends Controller
 
     public function create(): View
     {
-        return view('articles.create');
+        $allTopics = Topic::orderBy('title')->get();
+
+        return view('articles.create', compact('allTopics'));
     }
 
     public function store(StoreArticleRequest $request): RedirectResponse
@@ -59,7 +62,9 @@ class ArticleController extends Controller
     {
         Gate::authorize('update', $article);
 
-        return view('articles.edit', compact('article'));
+        $allTopics = Topic::orderBy('title')->get();
+
+        return view('articles.edit', compact('article', 'allTopics'));
     }
 
     public function update(UpdateArticleRequest $request, Article $article): RedirectResponse

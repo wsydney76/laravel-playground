@@ -10,9 +10,10 @@
     @else
         <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             @foreach ($topics as $topic)
-                <x-topics.card :topic="$topic" />
+                <div>
+                    <x-topics.card :topic="$topic" />
+                </div>
             @endforeach
         </div>
     @endif
 </x-layouts::app>
-

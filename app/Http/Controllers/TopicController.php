@@ -16,8 +16,9 @@ class TopicController extends Controller
 
     public function show(string $locale, Topic $topic): View
     {
-        $articles = $topic->articles()
-            ->with('user')
+        $articles = $topic
+            ->articles()
+            ->with(['user', 'topics'])
             ->published()
             ->latest()
             ->paginate(8);
@@ -25,5 +26,3 @@ class TopicController extends Controller
         return view('topics.show', compact('topic', 'articles'));
     }
 }
-
-

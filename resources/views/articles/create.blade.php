@@ -3,5 +3,6 @@
         :action="route('articles.store')"
         :submit-label="__('Publish')"
         :cancel-href="route('articles.index', app()->getLocale())"
+        :all-topics="$allTopics"
     />
 </x-layouts::app>

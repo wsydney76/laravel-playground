@@ -10,5 +10,6 @@
         :article="$article"
         :submit-label="__('Save Changes')"
         :cancel-href="$article->url"
+        :all-topics="$allTopics"
     />
 </x-layouts::app>
