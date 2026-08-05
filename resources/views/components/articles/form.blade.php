@@ -1,5 +1,6 @@
 @use('App\Enums\State')
 @use('App\Enums\Locale')
+@use('App\Models\Topic')
 
 @props([
     'action',
@@ -118,6 +119,31 @@
                     </flux:select.option>
                 @endforeach
             </flux:select>
+        </div>
+
+        <div>
+            @php
+                $allTopics = Topic::orderBy('title')->get();
+                $selectedTopicIds = old('topics', $article?->topics?->pluck('id')->toArray() ?? []);
+            @endphp
+            <flux:label>{{ __('Topics') }}</flux:label>
+            <div class="mt-1 space-y-1">
+                <div>
+                    <flux:select.option value="" disabled>{{ __('— none —') }}</flux:select.option>
+                </div>
+                @foreach ($allTopics as $topic)
+                    <div class="flex items-center gap-2">
+                        <flux:checkbox
+                            name="topics[]"
+                            value="{{ $topic->id }}"
+                            id="topic-{{ $topic->id }}"
+                            :checked="in_array($topic->id, array_map('intval', $selectedTopicIds))"
+                        />
+                        <flux:label for="topic-{{ $topic->id }}">{{ $topic->title }}</flux:label>
+                    </div>
+                @endforeach
+            </div>
+            <flux:error name="topics" />
         </div>
     </div>
 

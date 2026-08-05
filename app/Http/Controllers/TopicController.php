@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Topic;
+use Illuminate\View\View;
+
+class TopicController extends Controller
+{
+    public function index(): View
+    {
+        $topics = Topic::withCount('articles')->orderBy('title')->get();
+
+        return view('topics.index', compact('topics'));
+    }
+
+    public function show(string $locale, Topic $topic): View
+    {
+        $articles = $topic->articles()
+            ->with('user')
+            ->published()
+            ->latest()
+            ->paginate(8);
+
+        return view('topics.show', compact('topic', 'articles'));
+    }
+}
+
+

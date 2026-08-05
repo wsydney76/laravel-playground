@@ -16,7 +16,7 @@ class ArticleController extends Controller
 
     public function index(): View
     {
-        $articles = Article::with('user')->published()->latest()->paginate(8);
+        $articles = Article::with(['user', 'topics'])->published()->latest()->paginate(8);
         $title = __('Articles');
 
         return view('articles.index', compact('articles', 'title'));
@@ -49,6 +49,8 @@ class ArticleController extends Controller
         ) {
             abort(404);
         }
+
+        $article->load('topics');
 
         return view('articles.show', compact('article'));
     }

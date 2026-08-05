@@ -27,6 +27,16 @@
             </flux:heading>
         </a>
 
+        @if ($article->relationLoaded('topics') && $article->topics->isNotEmpty())
+            <div class="flex flex-wrap gap-1">
+                @foreach ($article->topics as $topic)
+                    <a href="{{ $topic->url }}">
+                        <flux:badge color="sky" size="sm">{{ $topic->title }}</flux:badge>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         <flux:text>{{ Str::limit($article->body, 120, preserveWords: true) }}</flux:text>
 
         <div class="flex items-center justify-between">

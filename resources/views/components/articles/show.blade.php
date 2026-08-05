@@ -20,6 +20,17 @@
         <p class="text-sm text-zinc-500">
             {{ __('By :name', ['name' => $article->creator?->name ?? $article->user->name]) }}
         </p>
+
+        @if ($article->topics->isNotEmpty())
+            <div class="flex flex-wrap gap-2">
+                @foreach ($article->topics as $topic)
+                    <a href="{{ $topic->url }}">
+                        <flux:badge color="sky" size="sm">{{ $topic->title }}</flux:badge>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         <p class="text-base text-zinc-800 dark:text-zinc-200">
             <x-nl2br :text="$article->body" />
         </p>

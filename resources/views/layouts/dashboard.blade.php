@@ -24,6 +24,9 @@
                 <flux:navlist.item :href="route('dashboard.homepage')" wire:navigate>
                     {{ __('Homepage') }}
                 </flux:navlist.item>
+                <flux:navlist.item :href="route('dashboard.topics')" wire:navigate>
+                    {{ __('Topics') }}
+                </flux:navlist.item>
             @endcan
         </flux:navlist>
     </div>

@@ -56,7 +56,12 @@ class ArticleService
         $data = $this->normalizeTranslatableFields($data);
         $data['creator_id'] = $author->id;
 
+        $topicIds = $data['topics'] ?? [];
+        unset($data['topics']);
+
         $article = $author->articles()->create($data);
+
+        $article->topics()->sync($topicIds);
 
         $this->syncMedia($article, 'featured_image', $featuredImage);
 
@@ -78,7 +83,12 @@ class ArticleService
     ): Article {
         $data = $this->normalizeTranslatableFields($data, $article->id);
 
+        $topicIds = $data['topics'] ?? [];
+        unset($data['topics']);
+
         $article->update($data);
+
+        $article->topics()->sync($topicIds);
 
         $this->syncMedia($article, 'featured_image', $featuredImage, $deleteFeaturedImage);
         $this->syncMediaMultiple(

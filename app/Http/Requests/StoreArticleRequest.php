@@ -22,6 +22,9 @@ class StoreArticleRequest extends FormRequest
             'body.*' => ['required', 'string'],
 
             'state' => ['nullable', Rule::enum(State::class)],
+
+            'topics'   => ['nullable', 'array'],
+            'topics.*' => ['integer', 'exists:topics,id'],
         ];
     }
 

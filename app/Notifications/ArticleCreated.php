@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
 class ArticleCreated extends Notification
 {
@@ -34,14 +35,11 @@ class ArticleCreated extends Notification
     {
         return (new MailMessage())
             ->greeting('Hello ' . $notifiable->name . '!')
-            ->line(
-                'A new article has been added by ' .
-                    $this->article->user->name .
-                    ': ' .
-                    $this->article->title,
-            )
-            ->action('Review it', $this->article->url)
-            ->line('Thank you for using our application!');
+            ->line('A new article has been added by ' . $this->article->user->name . ':')
+            ->line($this->article->title)
+            ->line('State: ' . $this->article->state->label())
+            ->line(Str::limit($this->article->body, 120, preserveWords: true))
+            ->action('Review it', $this->article->url);
     }
 
     /**

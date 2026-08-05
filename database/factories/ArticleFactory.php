@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Article;
+use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -35,5 +36,16 @@ class ArticleFactory extends Factory
             'body' => ['en' => fake()->paragraphs(3, true), 'de' => fake('de_DE')->paragraphs(3, true)],
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Article $article) {
+            $topic = Topic::inRandomOrder()->first();
+
+            if ($topic) {
+                $article->topics()->attach($topic->id);
+            }
+        });
     }
 }
