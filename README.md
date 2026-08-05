@@ -38,6 +38,10 @@ A lot of small improvements including
 
 * Support multi-files uploads in the media library form component.
 
+## Laravel Playground: 2.3.0
+
+* AI experiments: Added topics to articles.
+
 ### Laravel Custom
 
 Maybe all of this escalated a bit, so not very useful for beginners anymore.
