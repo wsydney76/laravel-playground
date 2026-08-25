@@ -1,0 +1,17 @@
+{
+    "servers": {
+        "laravel-boost": {
+            "type": "stdio",
+            "command": "wsl.exe",
+            "args": [
+                "-d",
+                "DDEV",
+                "--cd",
+                "/home/wsydn/apps/laravel-playground",
+                "ddev",
+                "artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "agents": [
+        "copilot"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "packages": [
+        "filament/filament",
+        "spatie/laravel-medialibrary",
+        "livewire/blaze",
+        "spatie/laravel-backup",
+        "spatie/laravel-translatable"
+    ],
+    "sail": false,
+    "skills": [
+        "infer-conventions",
+        "fortify-development",
+        "laravel-best-practices",
+        "fluxui-development",
+        "livewire-development",
+        "pest-testing",
+        "tailwindcss-development",
+        "blaze-optimize",
+        "laravel-backup",
+        "medialibrary-development",
+        "translatable-development"
+    ]
+}
